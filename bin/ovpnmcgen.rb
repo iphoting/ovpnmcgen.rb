@@ -5,6 +5,7 @@ require 'commander/import'
 
 program :version, Ovpnmcgen::VERSION
 program :description, Ovpnmcgen::SUMMARY
+program :help, 'Usage', 'ovpnmcgen.rb <command> [options] <args...>'
 program :help_formatter, :compact
 default_command :help
 never_trace!
