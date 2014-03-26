@@ -33,24 +33,24 @@ command :generate do |c|
   	raise ArgumentError.new "cafile is required." unless options.cafile
   	raise ArgumentError.new "tafile is required." unless options.tafile
     raise ArgumentError.new "PKCS#12 file is required." unless options.p12file
-  	options.default :vod => true
-  	user, device, p12file, p12pass = args
-  	inputs = {
-  		:user => user,
-  		:device => device,
-  		:p12file => options.p12file,
-  		:p12pass => options.p12pass,
-  		:cafile => options.cafile,
-  		:tafile => options.tafile,
-  		:host => options.host,
-  		:enableVOD => options.vod,
-  		:trusted_ssids => options.trusted_ssids,
-  		:untrusted_ssids => options.untrusted_ssids
-  	}
-  	unless options.output
-    	puts Ovpnmcgen.generate(inputs)
+    options.default :vod => true
+    user, device, p12file, p12pass = args
+    inputs = {
+      :user => user,
+      :device => device,
+      :p12file => options.p12file,
+      :p12pass => options.p12pass,
+      :cafile => options.cafile,
+      :tafile => options.tafile,
+      :host => options.host,
+      :enableVOD => options.vod,
+      :trusted_ssids => options.trusted_ssids,
+      :untrusted_ssids => options.untrusted_ssids
+    }
+    unless options.output
+      puts Ovpnmcgen.generate(inputs)
     else
-    	# write to file
+      # write to file
       begin
         File.write(options.output, Ovpnmcgen.generate(inputs))
       rescue Errno::ENOENT
