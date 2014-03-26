@@ -12,6 +12,26 @@ Install it yourself as:
 
 ## Usage
 
+```
+Usage: ovpnmcgen.rb generate [options] <user> <device>
+
+  Generates a .mobileconfig plist.
+
+  Options:
+    --cafile FILE        Path to OpenVPN CA file. (Required)
+    --tafile FILE        Path to TLS Key file. (Required)
+    --host HOSTNAME      Hostname of OpenVPN server. (Required)
+    --p12file FILE       Path to user PKCS#12 file. (Required)
+    --p12pass PASSWORD   Password to unlock PKCS#12 file.
+    --[no-]vod           Enable or Disable VPN-On-Demand. [Default:
+Enabled]
+    --trusted-ssids SSIDS List of comma-separated trusted SSIDs.
+    --untrusted-ssids SSIDS List of comma-separated untrusted SSIDs.
+    -o, --output FILE    Output to file. [Default: stdout]
+```
+
+## Examples
+
 ### Typical Usage
 	$ ovpnmcgen.rb gen --trusted-ssids home --host vpn.example.com \
 	--cafile path/to/ca.pem --tafile path/to/ta.key \
