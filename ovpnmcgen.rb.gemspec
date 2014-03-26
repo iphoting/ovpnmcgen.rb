@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Ronald Ip"]
   spec.email         = ["myself@iphoting.com"]
   spec.summary       = Ovpnmcgen::SUMMARY
-  spec.description   = "This utility generates configuration profiles that enables VPN-on-Demand."
+  spec.description   = "Generates iOS configuration profiles (.mobileconfig) that configures OpenVPN for use with VPN-on-Demand that are not accessible through the Apple Configurator or the iPhone Configuration Utility."
   spec.homepage      = ""
   spec.license       = "MIT"
 
