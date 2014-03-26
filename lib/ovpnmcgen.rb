@@ -15,6 +15,7 @@ module Ovpnmcgen
     certUUID = inputs[:certUUID] || `uuidgen`.chomp.upcase
     user, device, domain, host = inputs[:user], inputs[:device], inputs[:host], inputs[:host]
     enableVOD = inputs[:enableVOD]
+    p12pass = inputs[:p12pass] || ''
     trusted_ssids = inputs[:trusted_ssids] || false
     untrusted_ssids = inputs[:untrusted_ssids] || false
 
@@ -62,7 +63,7 @@ module Ovpnmcgen
     }
 
     cert = {
-      'Password' => inputs[:p12pass],
+      'Password' => p12pass,
       'PayloadCertificateFileName' => "#{user}-#{device}.p12",
       'PayloadContent' => StringData.new(p12file),
       'PayloadDescription' => 'Provides device authentication (certificate or identity).',
