@@ -6,6 +6,7 @@ require 'commander/import'
 program :version, Ovpnmcgen::VERSION
 program :description, Ovpnmcgen::SUMMARY
 program :help_formatter, :compact
+default_command :help
 never_trace!
 #global_option '-c', '--config FILE', 'Specify path to config file' #not implemented yet
  
