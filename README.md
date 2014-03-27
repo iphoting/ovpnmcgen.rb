@@ -42,11 +42,14 @@ Usage: ovpnmcgen.rb generate [options] <user> <device>
     --cafile FILE        Path to OpenVPN CA file. (Required)
     --tafile FILE        Path to TLS Key file. (Required)
     --host HOSTNAME      Hostname of OpenVPN server. (Required)
+    --proto PROTO        OpenVPN server protocol. [Default: udp]
+    -p, --port PORT      OpenVPN server port. [Default: 1194]
     --p12file FILE       Path to user PKCS#12 file. (Required)
     --p12pass PASSWORD   Password to unlock PKCS#12 file.
     --[no-]vod           Enable or Disable VPN-On-Demand. [Default: Enabled]
-    --trusted-ssids SSIDS List of comma-separated trusted SSIDs.
-    --untrusted-ssids SSIDS List of comma-separated untrusted SSIDs.
+    -t, --trusted-ssids SSIDS List of comma-separated trusted SSIDs.
+    -u, --untrusted-ssids SSIDS List of comma-separated untrusted SSIDs.
+    --ovpnconfigfile FILE Path to OpenVPN client config file.
     -o, --output FILE    Output to file. [Default: stdout]
 ```
 
