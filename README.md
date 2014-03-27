@@ -16,9 +16,22 @@ Note: The other match triggers, such as `DNSDomainMatch`, `DNSServerAddressMatch
 
 ## Installation
 
-Install it yourself as:
+Install the production version from Rubygems.org:
 
     $ gem install ovpnmcgen.rb
+
+### Local Development
+
+Clone the source:
+
+	$ git clone https://github.com/iphoting/ovpnmcgen.rb
+
+Build and install the gem:
+
+	$ cd ovpnmcgen.rb/
+	$ bundle install   # install dependencies
+	# Hack away...
+	$ rake install     # build and install gem
 
 ## Usage
 
