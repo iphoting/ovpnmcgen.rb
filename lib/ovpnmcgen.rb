@@ -13,8 +13,7 @@ module Ovpnmcgen
     identifier = inputs[:identifier] || inputs[:host].split('.').reverse!.join('.')
     port = inputs[:port] || 1194
     certUUID = inputs[:certUUID] || `uuidgen`.chomp.upcase
-    user, device, domain, host = inputs[:user], inputs[:device], inputs[:host], inputs[:host]
-    enableVOD = inputs[:enableVOD]
+    user, device, domain, host, proto, enableVOD = inputs[:user], inputs[:device], inputs[:host], inputs[:host], inputs[:proto], inputs[:enableVOD]
     p12pass = inputs[:p12pass] || ''
     trusted_ssids = inputs[:trusted_ssids] || false
     untrusted_ssids = inputs[:untrusted_ssids] || false
@@ -101,8 +100,8 @@ module Ovpnmcgen
         'key-direction' => '1',
         'persist-key' => 'NOARGS',
         'persist-tun' => 'NOARGS',
-        'proto' => 'udp',
-        'remote' => "#{host} #{port} udp",
+        'proto' => proto,
+        'remote' => "#{host} #{port} #{proto}",
         'remote-cert-tls' => 'server',
         'resolv-retry' => 'infinite',
         'tls-auth' => tls_auth,

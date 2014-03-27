@@ -21,6 +21,8 @@ command :generate do |c|
   c.option '--cafile FILE', 'Path to OpenVPN CA file. (Required)'
   c.option '--tafile FILE', 'Path to TLS Key file. (Required)'
   c.option '--host HOSTNAME', 'Hostname of OpenVPN server. (Required)'
+  c.option '--proto PROTO', 'OpenVPN server protocol. [Default: udp]'
+  c.option '-p', '--port PORT', 'OpenVPN server port. [Default: 1194]'
   c.option '--p12file FILE', 'Path to user PKCS#12 file. (Required)'
   c.option '--p12pass PASSWORD', 'Password to unlock PKCS#12 file.'
   c.option '--[no-]vod', 'Enable or Disable VPN-On-Demand. [Default: Enabled]'
@@ -33,7 +35,7 @@ command :generate do |c|
     raise ArgumentError.new "cafile is required" unless options.cafile
     raise ArgumentError.new "tafile is required" unless options.tafile
     raise ArgumentError.new "PKCS#12 file is required" unless options.p12file
-    options.default :vod => true
+    options.default :vod => true, :proto => 'udp', :port => 1194
     user, device, p12file, p12pass = args
     inputs = {
       :user => user,
@@ -43,6 +45,8 @@ command :generate do |c|
       :cafile => options.cafile,
       :tafile => options.tafile,
       :host => options.host,
+      :proto => options.proto,
+      :port => options.port,
       :enableVOD => options.vod,
       :trusted_ssids => options.trusted_ssids,
       :untrusted_ssids => options.untrusted_ssids
