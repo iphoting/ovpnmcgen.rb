@@ -1,0 +1,11 @@
+= 0.1.0 / 2014-03-27
+	* Added support for `--ovpnconfigfile`, `--port`, `--proto`.
+	* Shorter switches for `--[un]trusted-ssids`.
+	* Improved Documentation.
+
+= 0.0.2 / 2014-03-26
+	* Require ruby >= 1.9.3.
+	* Improved Documentation.
+
+= 0.0.1 / 2014-03-26
+	* Initial Release.
