@@ -30,7 +30,7 @@ command :generate do |c|
   c.option '-u', '--untrusted-ssids SSIDS', Array, 'List of comma-separated untrusted SSIDs.'
   c.option '-o', '--output FILE', 'Output to file. [Default: stdout]'
   c.action do |args, options|
-    raise ArgumentError.new "Invalid arguments. Run #{File.basename(__FILE__)} help for guidance" if args.nil? or args.length < 2
+    raise ArgumentError.new "Invalid arguments. Run '#{File.basename(__FILE__)} help generate' for guidance" if args.nil? or args.length < 2
     raise ArgumentError.new "Host is required" unless options.host
     raise ArgumentError.new "cafile is required" unless options.cafile
     raise ArgumentError.new "tafile is required" unless options.tafile
