@@ -26,8 +26,8 @@ command :generate do |c|
   c.option '--p12file FILE', 'Path to user PKCS#12 file. (Required)'
   c.option '--p12pass PASSWORD', 'Password to unlock PKCS#12 file.'
   c.option '--[no-]vod', 'Enable or Disable VPN-On-Demand. [Default: Enabled]'
-  c.option '--trusted-ssids SSIDS', Array, 'List of comma-separated trusted SSIDs.'
-  c.option '--untrusted-ssids SSIDS', Array, 'List of comma-separated untrusted SSIDs.'
+  c.option '-t', '--trusted-ssids SSIDS', Array, 'List of comma-separated trusted SSIDs.'
+  c.option '-u', '--untrusted-ssids SSIDS', Array, 'List of comma-separated untrusted SSIDs.'
   c.option '-o', '--output FILE', 'Output to file. [Default: stdout]'
   c.action do |args, options|
     raise ArgumentError.new "Invalid arguments. Run #{File.basename(__FILE__)} help for guidance" if args.nil? or args.length < 2
