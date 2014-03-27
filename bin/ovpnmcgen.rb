@@ -28,6 +28,7 @@ command :generate do |c|
   c.option '--[no-]vod', 'Enable or Disable VPN-On-Demand. [Default: Enabled]'
   c.option '-t', '--trusted-ssids SSIDS', Array, 'List of comma-separated trusted SSIDs.'
   c.option '-u', '--untrusted-ssids SSIDS', Array, 'List of comma-separated untrusted SSIDs.'
+  c.option '--ovpnconfigfile FILE', 'Path to OpenVPN client config file.'
   c.option '-o', '--output FILE', 'Output to file. [Default: stdout]'
   c.action do |args, options|
     raise ArgumentError.new "Invalid arguments. Run '#{File.basename(__FILE__)} help generate' for guidance" if args.nil? or args.length < 2
@@ -51,6 +52,8 @@ command :generate do |c|
       :trusted_ssids => options.trusted_ssids,
       :untrusted_ssids => options.untrusted_ssids
     }
+    inputs[:ovpnconfigfile] = options.ovpnconfigfile if options.ovpnconfigfile
+
     unless options.output
       puts Ovpnmcgen.generate(inputs)
     else

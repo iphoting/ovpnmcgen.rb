@@ -278,6 +278,9 @@ Output similar to above:
 	The same UUID should be used for profile updates, so that iOS knows which profile to replace, especially in MDM environments.
 
 - Adopt OpenVPN parameters from an OpenVPN-compatible client.conf input file.
+
+	Implemented, but lacks support for inline `<ca|tls-auth>` data enclosures.
+
 - Sign/Encrypt .mobileconfig.
 
 	Current workaround is to use a trusted MDM solution to securely push these unsigned, unencrypted profiles to iOS devices, through the encrypted MDM connected.

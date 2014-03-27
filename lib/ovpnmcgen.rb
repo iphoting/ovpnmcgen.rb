@@ -1,4 +1,5 @@
 require "ovpnmcgen/version"
+require "ovpnmcgen/ovpnconfig"
 require 'plist'
 require 'base64'
 
@@ -38,6 +39,21 @@ module Ovpnmcgen
       puts "PCKS#12 file not found: #{inputs[:p12file]}!"
       exit
     end
+
+    unless inputs[:ovpnconfigfile].nil?
+      ovpnconfighash = Ovpnmcgen.getOVPNVendorConfigHash(inputs[:ovpnconfigfile])
+    else # Bare minimum configuration
+      ovpnconfighash = {
+        'client' => 'NOARGS',
+        'comp-lzo' => 'NOARGS',
+        'dev' => 'tun',
+        'key-direction' => '1',
+        'remote-cert-tls' => 'server'
+      }
+    end
+    ovpnconfighash['remote'] = "#{host} #{port} #{proto}"
+    ovpnconfighash['ca'] = ca_cert
+    ovpnconfighash['tls-auth'] = tls_auth
 
     vpnOnDemandRules = Array.new
     vodTrusted = { # Trust only Wifi SSID
@@ -92,21 +108,7 @@ module Ovpnmcgen
       },
       'VPNSubType' => 'net.openvpn.OpenVPN-Connect.vpnplugin',
       'VPNType' => 'VPN',
-      'VendorConfig' => {
-        'ca' => ca_cert,
-        'client' => 'NOARGS',
-        'comp-lzo' => 'NOARGS',
-        'dev' => 'tun',
-        'key-direction' => '1',
-        'persist-key' => 'NOARGS',
-        'persist-tun' => 'NOARGS',
-        'proto' => proto,
-        'remote' => "#{host} #{port} #{proto}",
-        'remote-cert-tls' => 'server',
-        'resolv-retry' => 'infinite',
-        'tls-auth' => tls_auth,
-        'verb' => '3'
-      }
+      'VendorConfig' => ovpnconfighash
     }
 
     plistPayloadContent = [vpn, cert] # to encrypt this array
