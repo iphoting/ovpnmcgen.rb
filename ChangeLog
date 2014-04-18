@@ -1,3 +1,8 @@
+= 0.2.0 / 2014-04-18
+	* Support custom UUID value overrides.
+	* Support for security level, i.e. paranoid, high (default), medium.
+	* TLS-Auth keyfile now optional.
+
 = 0.1.0 / 2014-03-27
 	* Added support for `--ovpnconfigfile`, `--port`, `--proto`.
 	* Shorter switches for `--[un]trusted-ssids`.
