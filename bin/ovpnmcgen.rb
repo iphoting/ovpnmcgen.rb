@@ -19,7 +19,7 @@ command :generate do |c|
   c.example 'Extended Usage', 'ovpnmcgen.rb gen --trusted-ssids home,school --untrusted-ssids virusnet --host vpn.example.com --cafile path/to/ca.pem --tafile path/to/ta.key --p12file path/to/john-ipad.p12 --p12pass p12passphrase john ipad'
   c.example 'Using OpenSSL to convert files into PKCS#12 (.p12)', 'openssl pkcs12 -export -out path/to/john-ipad.p12 -inkey path/to/john-ipad.key -in path/to/john-ipad.crt -passout pass:p12passphrase -name john-ipad@vpn.example.com'
   c.option '--cafile FILE', 'Path to OpenVPN CA file. (Required)'
-  c.option '--tafile FILE', 'Path to TLS Key file. (Required)'
+  c.option '--tafile FILE', 'Path to TLS-Auth Key file.'
   c.option '--host HOSTNAME', 'Hostname of OpenVPN server. (Required)'
   c.option '--proto PROTO', 'OpenVPN server protocol. [Default: udp]'
   c.option '-p', '--port PORT', 'OpenVPN server port. [Default: 1194]'
@@ -38,7 +38,6 @@ command :generate do |c|
     raise ArgumentError.new "Invalid arguments. Run '#{File.basename(__FILE__)} help generate' for guidance" if args.nil? or args.length < 2
     raise ArgumentError.new "Host is required" unless options.host
     raise ArgumentError.new "cafile is required" unless options.cafile
-    raise ArgumentError.new "tafile is required" unless options.tafile
     raise ArgumentError.new "PKCS#12 file is required" unless options.p12file
     options.default :vod => true, :proto => 'udp', :port => 1194, :security_level => 'high'
     user, device, p12file, p12pass = args
@@ -48,7 +47,6 @@ command :generate do |c|
       :p12file => options.p12file,
       :p12pass => options.p12pass,
       :cafile => options.cafile,
-      :tafile => options.tafile,
       :host => options.host,
       :proto => options.proto,
       :port => options.port,
@@ -61,6 +59,7 @@ command :generate do |c|
       :security_level => options.security_level
     }
     inputs[:ovpnconfigfile] = options.ovpnconfigfile if options.ovpnconfigfile
+    inputs[:tafile] = options.tafile if options.tafile
 
     unless options.output
       puts Ovpnmcgen.generate(inputs)

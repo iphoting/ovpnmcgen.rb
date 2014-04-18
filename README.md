@@ -40,7 +40,7 @@ Usage: ovpnmcgen.rb generate [options] <user> <device>
 
   Options:
     --cafile FILE        Path to OpenVPN CA file. (Required)
-    --tafile FILE        Path to TLS Key file. (Required)
+    --tafile FILE        Path to TLS-Auth Key file.
     --host HOSTNAME      Hostname of OpenVPN server. (Required)
     --proto PROTO        OpenVPN server protocol. [Default: udp]
     -p, --port PORT      OpenVPN server port. [Default: 1194]

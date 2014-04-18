@@ -33,7 +33,7 @@ module Ovpnmcgen
     rescue Errno::ENOENT
       puts "TLS file not found: #{inputs[:tafile]}!"
       exit
-    end
+    end if inputs[:tafile]
 
     begin
       p12file = Base64.encode64(File.read(inputs[:p12file]))
@@ -49,13 +49,13 @@ module Ovpnmcgen
         'client' => 'NOARGS',
         'comp-lzo' => 'NOARGS',
         'dev' => 'tun',
-        'key-direction' => '1',
         'remote-cert-tls' => 'server'
       }
     end
     ovpnconfighash['remote'] = "#{host} #{port} #{proto}"
     ovpnconfighash['ca'] = ca_cert
-    ovpnconfighash['tls-auth'] = tls_auth
+    ovpnconfighash['tls-auth'] = tls_auth if inputs[:tafile]
+    ovpnconfighash['key-direction'] = '1' if inputs[:tafile]
 
     vpnOnDemandRules = Array.new
     vodTrusted = { # Trust only Wifi SSID
