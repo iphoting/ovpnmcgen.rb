@@ -297,6 +297,20 @@ Output similar to above:
 	-inkey path/to/john-ipad.key -in path/to/john-ipad.crt \
 	-passout pass:p12passphrase -name john-ipad@vpn.example.com
 
+## Known Issues
+
+- "Not connected to Internet" error/behaviour when VPN should be established.
+
+	There is a bug in the iOS/OS X network routing code that hangs the routing system, preventing the gateway or IP address from being set. This happens more frequently when the tunnel is brought up/down more frequently.
+
+	Workaround: Hard-restart iOS. Press and hold down both the home and sleep/wake buttons until iOS turns off and back on with the Apple boot up screen. Release when the Apple boot up screen appears.
+
+- Weird Rapid Connecting…/Disconnected behaviour.
+
+	Usually happens when the VoD component is stuck in an infinite loop. Not sure what triggers it.
+
+	Workaround: Hard-restart iOS. Press and hold down both the home and sleep/wake buttons until iOS turns off and back on with the Apple boot up screen. Release when the Apple boot up screen appears.
+
 ## TODO
 
 - Config file to specify global options, such as `--cafile`, `--tafile`, `--host`, `--[un]trusted-ssids`.
