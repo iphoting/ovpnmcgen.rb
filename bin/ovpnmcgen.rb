@@ -26,6 +26,7 @@ command :generate do |c|
   c.option '--p12file FILE', 'Path to user PKCS#12 file. (Required)'
   c.option '--p12pass PASSWORD', 'Password to unlock PKCS#12 file.'
   c.option '--[no-]vod', 'Enable or Disable VPN-On-Demand. [Default: Enabled]'
+  c.option '--security-level LEVEL', 'Security level of VPN-On-Demand Behaviour: paranoid, high, medium. [Default: high]'
   c.option '--vpn-uuid UUID', 'Override a VPN configuration payload UUID.'
   c.option '--profile-uuid UUID', 'Override a Profile UUID.'
   c.option '--cert-uuid UUID', 'Override a Certificate payload UUID.'
@@ -39,7 +40,7 @@ command :generate do |c|
     raise ArgumentError.new "cafile is required" unless options.cafile
     raise ArgumentError.new "tafile is required" unless options.tafile
     raise ArgumentError.new "PKCS#12 file is required" unless options.p12file
-    options.default :vod => true, :proto => 'udp', :port => 1194
+    options.default :vod => true, :proto => 'udp', :port => 1194, :security_level => 'high'
     user, device, p12file, p12pass = args
     inputs = {
       :user => user,
@@ -56,7 +57,8 @@ command :generate do |c|
       :untrusted_ssids => options.untrusted_ssids,
       :profile_uuid => options.profile_uuid,
       :vpn_uuid => options.vpn_uuid,
-      :cert_uuid => options.cert_uuid
+      :cert_uuid => options.cert_uuid,
+      :security_level => options.security_level
     }
     inputs[:ovpnconfigfile] = options.ovpnconfigfile if options.ovpnconfigfile
 

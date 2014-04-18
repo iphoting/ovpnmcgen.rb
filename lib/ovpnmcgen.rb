@@ -71,10 +71,22 @@ module Ovpnmcgen
 
     vpnOnDemandRules << { # Untrust all Wifi
       'InterfaceTypeMatch' => 'WiFi',
-      'Action' => 'Connect'
+      'Action' => case inputs[:security_level]
+        when 'paranoid', 'high'
+          'Connect'
+        else # medium
+          'Ignore'
+        end
     } << { # Trust Cellular
       'InterfaceTypeMatch' => 'Cellular',
-      'Action' => 'Ignore'
+      'Action' => case inputs[:security_level]
+          when 'paranoid'
+            'Connect'
+          when 'high'
+            'Ignore'
+          else # medium
+            'Disconnect'
+          end
     } << { # Default catch-all
       'Action' => 'Connect'
     }
