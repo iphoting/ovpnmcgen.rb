@@ -26,6 +26,9 @@ command :generate do |c|
   c.option '--p12file FILE', 'Path to user PKCS#12 file. (Required)'
   c.option '--p12pass PASSWORD', 'Password to unlock PKCS#12 file.'
   c.option '--[no-]vod', 'Enable or Disable VPN-On-Demand. [Default: Enabled]'
+  c.option '--vpn-uuid UUID', 'Override a VPN configuration payload UUID.'
+  c.option '--profile-uuid UUID', 'Override a Profile UUID.'
+  c.option '--cert-uuid UUID', 'Override a Certificate payload UUID.'
   c.option '-t', '--trusted-ssids SSIDS', Array, 'List of comma-separated trusted SSIDs.'
   c.option '-u', '--untrusted-ssids SSIDS', Array, 'List of comma-separated untrusted SSIDs.'
   c.option '--ovpnconfigfile FILE', 'Path to OpenVPN client config file.'
@@ -50,7 +53,10 @@ command :generate do |c|
       :port => options.port,
       :enableVOD => options.vod,
       :trusted_ssids => options.trusted_ssids,
-      :untrusted_ssids => options.untrusted_ssids
+      :untrusted_ssids => options.untrusted_ssids,
+      :profile_uuid => options.profile_uuid,
+      :vpn_uuid => options.vpn_uuid,
+      :cert_uuid => options.cert_uuid
     }
     inputs[:ovpnconfigfile] = options.ovpnconfigfile if options.ovpnconfigfile
 

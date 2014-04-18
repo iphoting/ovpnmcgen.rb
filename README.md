@@ -47,6 +47,9 @@ Usage: ovpnmcgen.rb generate [options] <user> <device>
     --p12file FILE       Path to user PKCS#12 file. (Required)
     --p12pass PASSWORD   Password to unlock PKCS#12 file.
     --[no-]vod           Enable or Disable VPN-On-Demand. [Default: Enabled]
+    --vpn-uuid UUID      Override a VPN configuration payload UUID.
+    --profile-uuid UUID  Override a Profile UUID.
+    --cert-uuid UUID     Override a Certificate payload UUID.
     -t, --trusted-ssids SSIDS List of comma-separated trusted SSIDs.
     -u, --untrusted-ssids SSIDS List of comma-separated untrusted SSIDs.
     --ovpnconfigfile FILE Path to OpenVPN client config file.
@@ -279,6 +282,8 @@ Output similar to above:
 - Batch-operation mode, with CSV-file as input, and a CSV UUID-index file to track generated profiles as output.
 
 	The same UUID should be used for profile updates, so that iOS knows which profile to replace, especially in MDM environments.
+
+	Custom overrides now supported for UUIDs.
 
 - Adopt OpenVPN parameters from an OpenVPN-compatible client.conf input file.
 

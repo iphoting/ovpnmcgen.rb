@@ -13,7 +13,9 @@ module Ovpnmcgen
   def generate(inputs = {})
     identifier = inputs[:identifier] || inputs[:host].split('.').reverse!.join('.')
     port = inputs[:port] || 1194
-    certUUID = inputs[:certUUID] || `uuidgen`.chomp.upcase
+    certUUID = inputs[:cert_uuid] || `uuidgen`.chomp.upcase
+    vpnUUID = inputs[:vpn_uuid] || `uuidgen`.chomp.upcase
+    plistUUID = inputs[:profile_uuid] || `uuidgen`.chomp.upcase
     user, device, domain, host, proto, enableVOD = inputs[:user], inputs[:device], inputs[:host], inputs[:host], inputs[:proto], inputs[:enableVOD]
     p12pass = inputs[:p12pass] || ''
     trusted_ssids = inputs[:trusted_ssids] || false
@@ -96,7 +98,7 @@ module Ovpnmcgen
       'PayloadIdentifier' => "#{identifier}.#{user}-#{device}.vpnconfig",
       'PayloadOrganization' => domain,
       'PayloadType' => 'com.apple.vpn.managed',
-      'PayloadUUID' => `uuidgen`.chomp.upcase,
+      'PayloadUUID' => vpnUUID,
       'PayloadVersion' => 1,
       'UserDefinedName' => "#{host}/VoD",
       'VPN' => {
@@ -121,7 +123,7 @@ module Ovpnmcgen
       'PayloadOrganization' => domain,
       'PayloadRemovalDisallowed' => false,
       'PayloadType' => 'Configuration',
-      'PayloadUUID' => `uuidgen`.chomp.upcase,
+      'PayloadUUID' => plistUUID,
       'PayloadVersion' => 1,
       #'EncryptedPayloadContent' => StringData.new(encPlistPayloadContent)
       'PayloadContent' => plistPayloadContent
