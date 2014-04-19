@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["myself@iphoting.com"]
   spec.summary       = Ovpnmcgen::SUMMARY
   spec.description   = "Generates iOS configuration profiles (.mobileconfig) that configures OpenVPN for use with VPN-on-Demand that are not accessible through the Apple Configurator or the iPhone Configuration Utility."
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/iphoting/ovpnmcgen.rb"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
@@ -21,7 +21,7 @@ Gem::Specification.new do |spec|
   spec.required_ruby_version = '>= 1.9.3'
 
   spec.add_development_dependency "bundler", "~> 1.5"
-  spec.add_development_dependency "rake"
-  spec.add_runtime_dependency     "plist"
-  spec.add_runtime_dependency     "commander", "~> 4.1"
+  spec.add_development_dependency "rake", "~> 10.0"
+  spec.add_runtime_dependency     "plist", "~> 3.1", ">= 3.1.0"
+  spec.add_runtime_dependency     "commander", "~> 4.1", ">= 4.1.6"
 end
