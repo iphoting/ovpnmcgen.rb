@@ -14,7 +14,7 @@ module Ovpnmcgen
       end
 
       # TODO: Handle multiple remote lines.
-      # Currently, the last remote line will be used.
+      # Currently, all remote lines are ignored.
 
       # map to key => value pairs for plist purposes. Singular verbs will be: 'verb' => 'NOARGS'.
       ovpnhash = Hash[ovpnfile.map do |l|
