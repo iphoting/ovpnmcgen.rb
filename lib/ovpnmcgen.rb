@@ -1,15 +1,11 @@
 require "ovpnmcgen/version"
 require "ovpnmcgen/ovpnconfig"
+require "ovpnmcgen/stringdata"
 require 'plist'
 require 'base64'
 require 'securerandom'
 
 module Ovpnmcgen
-  class StringData < String
-    def to_plist_node
-      return "<data>\n#{self}</data>"
-    end
-  end
 
   def generate(inputs = {})
     identifier = inputs[:identifier] || inputs[:host].split('.').reverse!.join('.')
