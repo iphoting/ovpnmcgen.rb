@@ -1,4 +1,4 @@
-= 0.2.1 / Unreleased
+= 0.2.1 / 2014-04-19
 	* Implement unit testing.
 	* Switch to a portable and native uuidgen implementation.
 	* Minor documentation improvements.
