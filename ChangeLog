@@ -1,3 +1,8 @@
+= 0.2.1 / Unreleased
+	* Implement unit testing.
+	* Switch to a portable and native uuidgen implementation.
+	* Minor documentation improvements.
+
 = 0.2.0 / 2014-04-18
 	* Support custom UUID value overrides.
 	* Support for security level, i.e. paranoid, high (default), medium.
