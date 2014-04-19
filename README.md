@@ -2,6 +2,8 @@
 
 OpenVPN iOS Configuration Profile Utility
 
+[![GitHub version](https://badge.fury.io/gh/iphoting%2Fovpnmcgen.rb.svg)](http://badge.fury.io/gh/iphoting%2Fovpnmcgen.rb) [![Gem Version](https://badge.fury.io/rb/ovpnmcgen.rb.svg)](http://badge.fury.io/rb/ovpnmcgen.rb) [![Build Status](https://travis-ci.org/iphoting/ovpnmcgen.rb.svg?branch=master)](https://travis-ci.org/iphoting/ovpnmcgen.rb)
+
 Generates iOS configuration profiles (.mobileconfig) that configures OpenVPN for use with VPN-on-Demand that are not accessible through the Apple Configurator or the iPhone Configuration Utility.
 
 Although there are many possible VPN-on-Demand (VoD) triggers, this utility currently only implements `SSIDMatch` and `InterfaceTypeMatch`. For 'high' (default) security level, the following algorithm is executed upon network changes, in order:
