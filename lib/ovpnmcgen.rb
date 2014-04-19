@@ -2,6 +2,7 @@ require "ovpnmcgen/version"
 require "ovpnmcgen/ovpnconfig"
 require 'plist'
 require 'base64'
+require 'securerandom'
 
 module Ovpnmcgen
   class StringData < String
@@ -13,9 +14,9 @@ module Ovpnmcgen
   def generate(inputs = {})
     identifier = inputs[:identifier] || inputs[:host].split('.').reverse!.join('.')
     port = inputs[:port] || 1194
-    certUUID = inputs[:cert_uuid] || `uuidgen`.chomp.upcase
-    vpnUUID = inputs[:vpn_uuid] || `uuidgen`.chomp.upcase
-    plistUUID = inputs[:profile_uuid] || `uuidgen`.chomp.upcase
+    certUUID = inputs[:cert_uuid] || SecureRandom.uuid.chomp.upcase
+    vpnUUID = inputs[:vpn_uuid] || SecureRandom.uuid.chomp.upcase
+    plistUUID = inputs[:profile_uuid] || SecureRandom.uuid.chomp.upcase
     user, device, domain, host, proto, enableVOD = inputs[:user], inputs[:device], inputs[:host], inputs[:host], inputs[:proto], inputs[:enableVOD]
     p12pass = inputs[:p12pass] || ''
     trusted_ssids = inputs[:trusted_ssids] || false
