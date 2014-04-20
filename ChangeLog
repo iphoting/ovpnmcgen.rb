@@ -1,3 +1,6 @@
+= 0.2.2 / Unreleased
+	* Documentation updates.
+
 = 0.2.1 / 2014-04-19
 	* Implement unit testing.
 	* Switch to a portable and native uuidgen implementation.
