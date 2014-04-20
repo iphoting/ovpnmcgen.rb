@@ -122,6 +122,35 @@ Feature: Basic Generate Functionality
 			\s*<integer>0</integer>
 			"""
 
+	Scenario: The url-probe flag is set.
+		When I run `ovpnmcgen.rb g --host aruba.cucumber.org --cafile ca.crt --p12file p12file.p12 --url-probe 'https://url.to.probe/' cucumber aruba`
+		Then the output should match:
+			"""
+			<key>URLStringProbe</key>
+			\s*<string>https://url.to.probe/</string>
+			"""
+		And the output should match:
+			"""
+			<dict>
+			\s*<key>Action</key>
+			\s*<string>Ignore</string>
+			\s*</dict>
+			"""
+
+	Scenario: The url-probe flag is not set.
+		When I run `ovpnmcgen.rb g --host aruba.cucumber.org --cafile ca.crt --p12file p12file.p12 cucumber aruba`
+		Then the output should not contain:
+			"""
+			<key>URLStringProbe</key>
+			"""
+		And the output should not match:
+			"""
+			<dict>
+			\s*<key>Action</key>
+			\s*<string>Ignore</string>
+			\s*</dict>
+			"""
+
 	Scenario: The [un]trusted-ssids flags are set.
 		When I run `ovpnmcgen.rb g --host aruba.cucumber.org --cafile ca.crt --p12file p12file.p12 --trusted-ssids trusted1,trusted2 --untrusted-ssids evil3,evil4 cucumber aruba`
 		Then the output should match:

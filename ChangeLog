@@ -1,3 +1,8 @@
+= 0.3.0 / Unreleased
+	* Documentation updates.
+	* Added support for `URLStringProbe`, via `--url-probe`.
+	* Added support for configuration persistance, via ENV or ~/.ovpnmcgen.rb.yml or `--config` flag.
+
 = 0.2.1 / 2014-04-19
 	* Implement unit testing.
 	* Switch to a portable and native uuidgen implementation.
