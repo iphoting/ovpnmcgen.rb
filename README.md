@@ -44,6 +44,7 @@ Build and install the gem:
 Usage: ovpnmcgen.rb generate [options] <user> <device>
 
   Options:
+    -c, --config FILE    Specify path to config file. [Default: .ovpnmcgen.rb.yml]
     --cafile FILE        Path to OpenVPN CA file. (Required)
     --tafile FILE        Path to TLS-Auth Key file.
     --host HOSTNAME      Hostname of OpenVPN server. (Required)

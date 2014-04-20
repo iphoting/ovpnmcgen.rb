@@ -2,6 +2,7 @@
 
 require 'ovpnmcgen'
 require 'commander/import'
+require 'ovpnmcgen/config'
 
 program :version, Ovpnmcgen::VERSION
 program :description, Ovpnmcgen::SUMMARY
@@ -9,7 +10,7 @@ program :help, 'Usage', 'ovpnmcgen.rb <command> [options] <args...>'
 program :help_formatter, :compact
 default_command :help
 never_trace!
-#global_option '-c', '--config FILE', 'Specify path to config file' #not implemented yet
+global_option '-c', '--config FILE', 'Specify path to config file. [Default: .ovpnmcgen.rb.yml]'
  
 command :generate do |c|
   c.syntax = 'ovpnmcgen.rb generate [options] <user> <device>'
@@ -37,31 +38,53 @@ command :generate do |c|
   c.option '-o', '--output FILE', 'Output to file. [Default: stdout]'
   c.action do |args, options|
     raise ArgumentError.new "Invalid arguments. Run '#{File.basename(__FILE__)} help generate' for guidance" if args.nil? or args.length < 2
-    raise ArgumentError.new "Host is required" unless options.host
-    raise ArgumentError.new "cafile is required" unless options.cafile
-    raise ArgumentError.new "PKCS#12 file is required" unless options.p12file
-    options.default :vod => true, :proto => 'udp', :port => 1194, :security_level => 'high'
-    user, device, p12file, p12pass = args
+
+    # Set up configuration environment.
+    if options.config
+      Ovpnmcgen.configure(options.config)
+    else
+      Ovpnmcgen.configure
+    end
+    config = Ovpnmcgen.config
+
+    raise ArgumentError.new "Host is required" unless options.host or config.host
+    raise ArgumentError.new "cafile is required" unless options.cafile or config.cafile
+    raise ArgumentError.new "PKCS#12 file is required" unless options.p12file or config.p12file
+
+    options.default :vod => case
+      when config.vod == true || config.no_vod == false
+        true
+      when config.vod == false || config.no_vod == true
+        false
+      else # enabled by default
+        true
+      end,
+      :proto => (config.proto)? config.proto : 'udp',
+      :port => (config.port)? config.port : 1194,
+      :security_level => (config.security_level)? config.security_level : 'high'
+
+    user, device = args
+
     inputs = {
       :user => user,
       :device => device,
-      :p12file => options.p12file,
-      :p12pass => options.p12pass,
-      :cafile => options.cafile,
-      :host => options.host,
+      :p12file => options.p12file || config.p12file,
+      :p12pass => options.p12pass || config.p12pass,
+      :cafile => options.cafile || config.cafile,
+      :host => options.host || config.host,
       :proto => options.proto,
       :port => options.port,
       :enableVOD => options.vod,
-      :trusted_ssids => options.trusted_ssids,
-      :untrusted_ssids => options.untrusted_ssids,
-      :profile_uuid => options.profile_uuid,
-      :vpn_uuid => options.vpn_uuid,
-      :cert_uuid => options.cert_uuid,
+      :trusted_ssids => options.trusted_ssids || config.trusted_ssids,
+      :untrusted_ssids => options.untrusted_ssids || config.untrusted_ssids,
+      :profile_uuid => options.profile_uuid || config.profile_uuid,
+      :vpn_uuid => options.vpn_uuid || config.vpn_uuid,
+      :cert_uuid => options.cert_uuid || config.cert_uuid,
       :security_level => options.security_level
     }
-    inputs[:ovpnconfigfile] = options.ovpnconfigfile if options.ovpnconfigfile
-    inputs[:tafile] = options.tafile if options.tafile
-    inputs[:url_probe] = options.url_probe if options.url_probe
+    inputs[:ovpnconfigfile] = options.ovpnconfigfile || config.ovpnconfigfile if options.ovpnconfigfile or config.ovpnconfigfile
+    inputs[:tafile] = options.tafile || config.tafile if options.tafile or config.tafile
+    inputs[:url_probe] = options.url_probe || config.url_probe if options.url_probe or config.url_probe
 
     unless options.output
       puts Ovpnmcgen.generate(inputs)
