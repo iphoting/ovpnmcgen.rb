@@ -303,11 +303,15 @@ Output similar to above:
 
 - "Not connected to Internet" error/behaviour when VPN should be established.
 
+	Diagnosis: Load any site in Safari. An error message "Safari cannot open the page because your iPhone is not connected to the Internet" will be presented.
+
 	There is a bug in the iOS/OS X network routing code that hangs the routing system, preventing the gateway or IP address from being set. This happens more frequently when the tunnel is brought up/down more frequently.
 
 	Workaround: Hard-restart iOS. Press and hold down both the home and sleep/wake buttons until iOS turns off and back on with the Apple boot up screen. Release when the Apple boot up screen appears.
 
 - Weird Rapid Connecting…/Disconnected behaviour.
+
+	Diagnosis: VPN status in Settings.app rapid alternates between Connecting… and Disconnected.
 
 	Usually happens when the VoD component is stuck in an infinite loop. Not sure what triggers it.
 
@@ -320,11 +324,11 @@ Output similar to above:
 
 	The same UUID should be used for profile updates, so that iOS knows which profile to replace, especially in MDM environments.
 
-	Custom overrides now supported for UUIDs.
+	Custom UUID overrides now supported via `--{profile,vpn,cert}-uuid`.
 
 - Adopt OpenVPN parameters from an OpenVPN-compatible client.conf input file.
 
-	Implemented, but lacks support for inline `<ca|tls-auth>` data enclosures.
+	Implemented, but does not support inline `<ca|tls-auth>` data enclosures, and command line flags (that are required) override config file values.
 
 - Sign/Encrypt .mobileconfig.
 
