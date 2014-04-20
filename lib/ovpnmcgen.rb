@@ -63,10 +63,7 @@ module Ovpnmcgen
       'SSIDMatch' => untrusted_ssids,
       'Action' => 'Connect'
     }
-    vpnOnDemandRules << vodTrusted if trusted_ssids
-    vpnOnDemandRules << vodUntrusted if untrusted_ssids
-
-    vpnOnDemandRules << { # Untrust all Wifi
+    vodWifiOnly = { # Untrust all Wifi
       'InterfaceTypeMatch' => 'WiFi',
       'Action' => case inputs[:security_level]
         when 'paranoid', 'high'
@@ -74,7 +71,8 @@ module Ovpnmcgen
         else # medium
           'Ignore'
         end
-    } << { # Trust Cellular
+    }
+    vodCellularOnly = { # Trust Cellular
       'InterfaceTypeMatch' => 'Cellular',
       'Action' => case inputs[:security_level]
           when 'paranoid'
@@ -84,9 +82,20 @@ module Ovpnmcgen
           else # medium
             'Disconnect'
           end
-    } << { # Default catch-all
+    }
+    vodDefault = { # Default catch-all
       'Action' => 'Connect'
     }
+
+    # Insert URLStringProbe conditions when enabled with --url-probe
+    vodTrusted['URLStringProbe'] = vodUntrusted['URLStringProbe'] = vodWifiOnly['URLStringProbe'] = vodCellularOnly['URLStringProbe'] = vodDefault['URLStringProbe'] = inputs[:url_probe] if inputs[:url_probe]
+
+    vpnOnDemandRules << vodTrusted if trusted_ssids
+    vpnOnDemandRules << vodUntrusted if untrusted_ssids
+    vpnOnDemandRules << vodWifiOnly << vodCellularOnly << vodDefault
+    vpnOnDemandRules << { # Default catch-all when URLStringProbe is enabled and returns false to prevent circular race.
+      'Action' => 'Ignore'
+      } if inputs[:url_probe]
 
     cert = {
       'Password' => p12pass,
