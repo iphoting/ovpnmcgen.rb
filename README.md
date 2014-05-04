@@ -2,11 +2,14 @@
 
 OpenVPN iOS Configuration Profile Utility
 
-[![GitHub version](https://badge.fury.io/gh/iphoting%2Fovpnmcgen.rb.svg)](http://badge.fury.io/gh/iphoting%2Fovpnmcgen.rb) [![Gem Version](https://badge.fury.io/rb/ovpnmcgen.rb.svg)](http://badge.fury.io/rb/ovpnmcgen.rb) [![Build Status](https://travis-ci.org/iphoting/ovpnmcgen.rb.svg?branch=master)](https://travis-ci.org/iphoting/ovpnmcgen.rb)
+[![Stories in Ready](https://badge.waffle.io/iphoting/ovpnmcgen.rb.png?label=ready&title=Ready)](http://waffle.io/iphoting/ovpnmcgen.rb)
+[![GitHub version](https://badge.fury.io/gh/iphoting%2Fovpnmcgen.rb.svg)](http://badge.fury.io/gh/iphoting%2Fovpnmcgen.rb)
+[![Gem Version](https://badge.fury.io/rb/ovpnmcgen.rb.svg)](http://badge.fury.io/rb/ovpnmcgen.rb)
+[![Build Status](https://travis-ci.org/iphoting/ovpnmcgen.rb.svg?branch=master)](https://travis-ci.org/iphoting/ovpnmcgen.rb)
 
 Generates iOS configuration profiles (.mobileconfig) that configures OpenVPN for use with VPN-on-Demand that are not accessible through the Apple Configurator or the iPhone Configuration Utility.
 
-Although there are many possible VPN-on-Demand (VoD) triggers, this utility currently only implements `SSIDMatch` and `InterfaceTypeMatch`. For 'high' (default) security level, the following algorithm is executed upon network changes, in order:
+Although there are many possible VPN-on-Demand (VoD) triggers, this utility currently only implements `SSIDMatch`, `InterfaceTypeMatch`, and optionally `URLStringProbe`. For 'high' (default) security level, the following algorithm is executed upon network changes, in order:
 
 - If wireless SSID matches any specified with `--trusted-ssids`, tear down the VPN connection and do not reconnect on demand.
 - Else if wireless SSID matches any specified with `--untrusted-ssids`, unconditionally bring up the VPN connection on the next network attempt.
@@ -14,7 +17,7 @@ Although there are many possible VPN-on-Demand (VoD) triggers, this utility curr
 - Else if the primary network interface becomes Cellular, leave any existing VPN connection up, but do not reconnect on demand.
 - Else, unconditionally bring up the VPN connection on the next network attempt.
 
-Note: The other match triggers, such as `DNSDomainMatch`, `DNSServerAddressMatch`, `URLStringProbe`, and per-connection domain inspection (`ActionParameters`), are not implemented. I reckon some kind of DSL will need to be built to support them; pull-requests are welcome.
+Note: The other match triggers, such as `DNSDomainMatch`, `DNSServerAddressMatch`, and per-connection domain inspection (`ActionParameters`), are not implemented. I reckon some kind of DSL will need to be built to support them; pull-requests are welcome.
 
 ## Installation
 
@@ -55,6 +58,7 @@ Usage: ovpnmcgen.rb generate [options] <user> <device>
     --cert-uuid UUID     Override a Certificate payload UUID.
     -t, --trusted-ssids SSIDS List of comma-separated trusted SSIDs.
     -u, --untrusted-ssids SSIDS List of comma-separated untrusted SSIDs.
+    --url-probe URL      This URL must return HTTP status 200, without redirection, before the VPN service will try establishing.
     --ovpnconfigfile FILE Path to OpenVPN client config file.
     -o, --output FILE    Output to file. [Default: stdout]
 ```
@@ -78,6 +82,14 @@ For 'medium' security level, the following algorithm is executed upon network ch
 - Else if the primary network interface becomes Wifi (any SSID except those above), leave any existing VPN connection up, but do not reconnect on demand.
 - Else if the primary network interface becomes Cellular, leave any existing VPN connection up, but do not reconnect on demand.
 - Else, unconditionally bring up the VPN connection on the next network attempt.
+
+### URL Probe
+
+Apple provides a `URLStringProbe` test condition where a VPN connection will only be established, if and only if a specified URL is successfully fetched (returning a 200 HTTP status code) without redirection.
+
+This feature can be enabled for statistical and maintenance-protection reasons. Otherwise, it can also workaround a circular limitation with unsecured wireless captive portals. See Known Issues below for further elaboration.
+
+By enabling this option, you will need to reliably and quickly respond with HTTP status code 200 at the URL string supplied.
 
 ## Examples
 
@@ -235,6 +247,7 @@ Output:
 	--p12file path/to/john-ipad.p12 --p12pass p12passphrase john ipad
 
 Output similar to above:
+
 ```
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -323,7 +336,7 @@ Output similar to above:
 
 	Workaround: Manually disable VPN-on-Demand in Settings.app > VPN > Server (i) option screen. Reenable only after Internet access is available.
 
-	TODO: Implement `URLStringProbe` where, if and only if this URL is successfully fetched (returning a 200 HTTP status code) without redirection, will the VPN service be required, relied on, and brought up.
+	Solution: Implement `URLStringProbe` where, if and only if this URL is successfully fetched (returning a 200 HTTP status code) without redirection, will the VPN service be required, relied on, and brought up. Enable with the `--url-probe` flag.
 
 ## TODO
 
