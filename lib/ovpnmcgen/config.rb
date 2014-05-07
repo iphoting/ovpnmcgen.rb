@@ -10,8 +10,6 @@ module Ovpnmcgen
     @@config = AppConfiguration.new filename do
       prefix 'og'
     end
-
-    # @@config = AppConfiguration[:ovpnmcgen]
   end
 
   def config

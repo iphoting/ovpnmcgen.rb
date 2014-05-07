@@ -70,6 +70,17 @@ Option flags can be set using environment variables or placed into a YAML format
 
 Note: Only for YAML configuration files and environment variables, flags with hyphens (-) are replaced with underscores (_), i.e. `--trusted-ssids safe` should be `trusted_ssids: safe`.
 
+Sample:
+
+```
+untrusted_ssids: [dangerous1, dangerous2]
+trusted_ssids: [trust]
+host: vpn.example.com
+cafile: /etc/openvpn/ca.crt
+tafile: /etc/openvpn/ta.key
+url_probe: https://vpn.example.com/canVPN.php
+```
+
 ### Security Levels
 
 There are three different security levels to choose from, 'paranoid', 'high' (default), and 'medium'. The algorithm illustrated above is for 'high'.

@@ -35,6 +35,35 @@ Feature: Generate Functionality with Configuration File
 		Then the output should contain "error: "
 		And the output should not contain "error: Host"
 
+	Scenario: Single SSIDs specified should appear as an array in the output.
+		Given a file named ".ovpnmcgen.rb.yml" with:
+			"""
+			trusted_ssids: trust
+			"""
+		When I run `ovpnmcgen.rb g --host aruba.cucumber.org --cafile ca.crt --p12file p12file.p12 cucumber aruba`
+		Then the output should match:
+			"""
+			<key>SSIDMatch</key>
+			\s*<array>
+			\s*<string>trust</string>
+			\s*</array>
+			"""
+
+	Scenario: Multiple SSIDs specified should appear as an array in the output.
+		Given a file named ".ovpnmcgen.rb.yml" with:
+			"""
+			trusted_ssids: [trust1, trust2]
+			"""
+		When I run `ovpnmcgen.rb g --host aruba.cucumber.org --cafile ca.crt --p12file p12file.p12 cucumber aruba`
+		Then the output should match:
+			"""
+			<key>SSIDMatch</key>
+			\s*<array>
+			\s*<string>trust1</string>
+			\s*<string>trust2</string>
+			\s*</array>
+			"""
+
 	Scenario: Flags should override configuration file options.
 		Given a file named ".ovpnmcgen.rb.yml" with:
 			"""
