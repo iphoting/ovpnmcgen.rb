@@ -1,6 +1,11 @@
-= 0.4.0 / 2014-05-04
+= 0.4.1 / 2014-05-07
+	* Bugfix: SSIDs specified as a string in configfile now correctly output
+	as arrays. (#a9e638)
+
+= 0.4.0 / 2014-05-07
 	* VoD rules in `--[un]trusted-ssids` to also use `InterfaceTypeMatch`.
-	* Added support for configuration persistance, via ENV or ~/.ovpnmcgen.rb.yml or `--config` flag.
+	* Added support for configuration persistance, via ENV or
+	~/.ovpnmcgen.rb.yml or `--config` flag.
 
 = 0.3.0 / 2014-05-04
 	* Documentation updates.
