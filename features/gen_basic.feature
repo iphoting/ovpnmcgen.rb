@@ -156,6 +156,8 @@ Feature: Basic Generate Functionality
 		Then the output should match:
 			"""
 			<string>Disconnect</string>
+			\s*<key>InterfaceTypeMatch</key>
+			\s*<string>WiFi</string>
 			\s*<key>SSIDMatch</key>
 			\s*<array>
 			\s*<string>trusted1</string>
@@ -165,6 +167,8 @@ Feature: Basic Generate Functionality
 		And the output should match:
 			"""
 			<string>Connect</string>
+			\s*<key>InterfaceTypeMatch</key>
+			\s*<string>WiFi</string>
 			\s*<key>SSIDMatch</key>
 			\s*<array>
 			\s*<string>evil3</string>
