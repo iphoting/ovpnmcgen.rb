@@ -25,4 +25,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "aruba", "~> 0.5", ">= 0.5.4"
   spec.add_runtime_dependency     "plist", "~> 3.1", ">= 3.1.0"
   spec.add_runtime_dependency     "commander", "~> 4.1", ">= 4.1.6"
+  spec.add_runtime_dependency     "app_configuration", "~> 0.0", ">= 0.0.2"
 end
