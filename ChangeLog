@@ -1,3 +1,6 @@
+= 0.3.1 / Unreleased
+	* VoD rules in `--[un]trusted-ssids` to also use `InterfaceTypeMatch`.
+
 = 0.3.0 / 2014-05-04
 	* Documentation updates.
 	* Added support for `URLStringProbe`, via `--url-probe`.

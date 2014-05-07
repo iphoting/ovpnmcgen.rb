@@ -56,10 +56,12 @@ module Ovpnmcgen
 
     vpnOnDemandRules = Array.new
     vodTrusted = { # Trust only Wifi SSID
+      'InterfaceTypeMatch' => 'WiFi',
       'SSIDMatch' => trusted_ssids,
       'Action' => 'Disconnect'
     }
     vodUntrusted = { # Untrust Wifi
+      'InterfaceTypeMatch' => 'WiFi',
       'SSIDMatch' => untrusted_ssids,
       'Action' => 'Connect'
     }
