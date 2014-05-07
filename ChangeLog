@@ -1,5 +1,6 @@
 = 0.3.1 / Unreleased
 	* VoD rules in `--[un]trusted-ssids` to also use `InterfaceTypeMatch`.
+	* Added support for configuration persistance, via ENV or ~/.ovpnmcgen.rb.yml or `--config` flag.
 
 = 0.3.0 / 2014-05-04
 	* Documentation updates.

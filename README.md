@@ -44,6 +44,7 @@ Build and install the gem:
 Usage: ovpnmcgen.rb generate [options] <user> <device>
 
   Options:
+    -c, --config FILE    Specify path to config file. [Default: .ovpnmcgen.rb.yml]
     --cafile FILE        Path to OpenVPN CA file. (Required)
     --tafile FILE        Path to TLS-Auth Key file.
     --host HOSTNAME      Hostname of OpenVPN server. (Required)
@@ -62,6 +63,12 @@ Usage: ovpnmcgen.rb generate [options] <user> <device>
     --ovpnconfigfile FILE Path to OpenVPN client config file.
     -o, --output FILE    Output to file. [Default: stdout]
 ```
+
+### Configuration
+
+Option flags can be set using environment variables or placed into a YAML formatted file. The default filename `.ovpnmcgen.rb.yml` will be searched for in `./`, and then `~/`.
+
+Note: Only for YAML configuration files and environment variables, flags with hyphens (-) are replaced with underscores (_), i.e. `--trusted-ssids safe` should be `trusted_ssids: safe`.
 
 ### Security Levels
 
