@@ -143,13 +143,6 @@ Feature: Basic Generate Functionality
 			"""
 			<key>URLStringProbe</key>
 			"""
-		And the output should not match:
-			"""
-			<dict>
-			\s*<key>Action</key>
-			\s*<string>Ignore</string>
-			\s*</dict>
-			"""
 
 	Scenario: The [un]trusted-ssids flags are set.
 		When I run `ovpnmcgen.rb g --host aruba.cucumber.org --cafile ca.crt --p12file p12file.p12 --trusted-ssids trusted1,trusted2 --untrusted-ssids evil3,evil4 cucumber aruba`

@@ -90,7 +90,7 @@ module Ovpnmcgen
           end
     }
     vodDefault = { # Default catch-all
-      'Action' => 'Connect'
+      'Action' => 'Ignore'
     }
 
     # Insert URLStringProbe conditions when enabled with --url-probe

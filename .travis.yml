@@ -1,11 +1,13 @@
 language: ruby
+
 before_install:
   - gem update bundler
   - bundle version
+
 rvm:
-  - 1.9.3
-  - 2.0.0
-  - 2.1
+  - "1.9.3"
+  - "2.0.0"
+  - "2.1"
   - ruby-head
   - jruby-19mode
 
@@ -13,3 +15,14 @@ matrix:
   fast_finish: true
   allow_failures:
     - rvm: ruby-head
+    - rvm: jruby-19mode
+
+deploy:
+  provider: rubygems
+  api_key:
+    secure: BQQeiJ84RINkM5Pxm7zFSAbOS2T5THi+37CoswQXe5eTi+0PIl14plWJByGOj2ho2e6kam5XU/VUgQzDexhkFz174QDP+BIuhdNxRMuMqgKuffi0Cyb9CM7JybpsB+Yd97X3nNxiubR/qoJPQ5nvG1SvCuF2TK3Zq8cL5VfxZ9o=
+  gem: ovpnmcgen.rb
+  on:
+    tags: true
+    repo: "iphoting/ovpnmcgen.rb"
+    branch: master

@@ -1,3 +1,6 @@
+= 0.4.2 / 2014-07-05
+	* Bugfix: Default catch-all rule should be 'Ignore', any other option does not make sense.
+
 = 0.4.1 / 2014-05-07
 	* Bugfix: SSIDs specified as a string in configfile now correctly output
 	as arrays. (#a9e638)
