@@ -15,7 +15,7 @@ Although there are many possible VPN-on-Demand (VoD) triggers, this utility curr
 - Else if wireless SSID matches any specified with `--untrusted-ssids`, unconditionally bring up the VPN connection on the next network attempt.
 - Else if the primary network interface becomes Wifi (any SSID except those above), unconditionally bring up the VPN connection on the next network attempt.
 - Else if the primary network interface becomes Cellular, leave any existing VPN connection up, but do not reconnect on demand.
-- Else, unconditionally bring up the VPN connection on the next network attempt.
+- Else, leave any existing VPN connection up, but do not reconnect on demand.
 
 Note: The other match triggers, such as `DNSDomainMatch`, `DNSServerAddressMatch`, and per-connection domain inspection (`ActionParameters`), are not implemented. I reckon some kind of DSL will need to be built to support them; pull-requests are welcome.
 
@@ -91,7 +91,7 @@ For 'paranoid' security level, the following algorithm is executed upon network 
 - Else if wireless SSID matches any specified with `--untrusted-ssids`, unconditionally bring up the VPN connection on the next network attempt.
 - Else if the primary network interface becomes Wifi (any SSID except those above), unconditionally bring up the VPN connection on the next network attempt.
 - Else if the primary network interface becomes Cellular, unconditionally bring up the VPN connection on the next network attempt.
-- Else, unconditionally bring up the VPN connection on the next network attempt.
+- Else, leave any existing VPN connection up, but do not reconnect on demand.
 
 For 'medium' security level, the following algorithm is executed upon network changes, in order:
 
@@ -99,7 +99,7 @@ For 'medium' security level, the following algorithm is executed upon network ch
 - Else if wireless SSID matches any specified with `--untrusted-ssids`, unconditionally bring up the VPN connection on the next network attempt.
 - Else if the primary network interface becomes Wifi (any SSID except those above), leave any existing VPN connection up, but do not reconnect on demand.
 - Else if the primary network interface becomes Cellular, leave any existing VPN connection up, but do not reconnect on demand.
-- Else, unconditionally bring up the VPN connection on the next network attempt.
+- Else, leave any existing VPN connection up, but do not reconnect on demand.
 
 ### URL Probe
 
