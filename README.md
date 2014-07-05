@@ -359,6 +359,9 @@ Output similar to above:
 ## TODO
 
 - Config file to specify global options, such as `--cafile`, `--tafile`, `--host`, `--[un]trusted-ssids`.
+
+	See commit `#d9c015618` for feature.
+
 - Batch-operation mode, with CSV-file as input, and a CSV UUID-index file to track generated profiles as output.
 
 	The same UUID should be used for profile updates, so that iOS knows which profile to replace, especially in MDM environments.
