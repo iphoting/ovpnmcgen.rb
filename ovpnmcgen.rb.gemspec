@@ -6,6 +6,7 @@ require 'ovpnmcgen/version'
 Gem::Specification.new do |spec|
   spec.name          = "ovpnmcgen.rb"
   spec.version       = Ovpnmcgen::VERSION
+  spec.version       = "#{spec.version}-pre-#{ENV['TRAVIS_BUILD_NUMBER']}" if ENV['TRAVIS']
   spec.authors       = ["Ronald Ip"]
   spec.email         = ["myself@iphoting.com"]
   spec.summary       = Ovpnmcgen::SUMMARY
