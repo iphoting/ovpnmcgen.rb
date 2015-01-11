@@ -353,31 +353,31 @@ Output similar to above:
 
 - "Not connected to Internet" error/behaviour when VPN should be established.
 
-	Diagnosis: Load any site in Safari. An error message "Safari cannot open the page because your iPhone is not connected to the Internet" will be presented.
+	*Diagnosis*: Load any site in Safari. An error message "Safari cannot open the page because your iPhone is not connected to the Internet" will be presented.
 
 	There is a bug in the iOS/OS X network routing code that hangs the routing system, preventing the gateway or IP address from being set. This happens more frequently when the tunnel is brought up/down more frequently.
 
-	Solution: Upgrade to iOS 8.1. The new iOS update seems to have mostly solved issues surrounding the networking stack.
+	*Solution*: Upgrade to iOS 8.1. The new iOS update seems to have mostly solved issues surrounding the networking stack.
 
-	Workaround: Hard-restart iOS. Press and hold down both the home and sleep/wake buttons until iOS turns off and back on with the Apple boot up screen. Release when the Apple boot up screen appears.
+	*Workaround*: Hard-restart iOS. Press and hold down both the home and sleep/wake buttons until iOS turns off and back on with the Apple boot up screen. Release when the Apple boot up screen appears.
 
 - Weird Rapid Connecting…/Disconnected behaviour.
 
-	Diagnosis: VPN status in Settings.app rapid alternates between Connecting… and Disconnected.
+	*Diagnosis*: VPN status in Settings.app rapid alternates between Connecting… and Disconnected.
 
 	Usually happens when the VoD component is stuck in an infinite loop. Not sure what triggers it.
 
-	Solution: Upgrade to iOS 8.1. The new iOS update seems to have mostly solved issues surrounding the networking stack.
+	*Solution*: Upgrade to iOS 8.1. The new iOS update seems to have mostly solved issues surrounding the networking stack.
 
-	Workaround: Hard-restart iOS. Press and hold down both the home and sleep/wake buttons until iOS turns off and back on with the Apple boot up screen. Release when the Apple boot up screen appears.
+	*Workaround*: Hard-restart iOS. Press and hold down both the home and sleep/wake buttons until iOS turns off and back on with the Apple boot up screen. Release when the Apple boot up screen appears.
 
 - Cannot load Captive Portals (Hotspots on unsecured Wireless networks).
 
 	Some unsecured hotspots require navigating certain webpages before full access to the internet is available. This requirement blocks VPN connections and iOS will also block captive portal access, waiting on the VPN connection. This circular dependency results in no internet access.
 
-	Solution: Implement `URLStringProbe` where, if and only if this URL is successfully fetched (returning a 200 HTTP status code) without redirection, will the VPN service be required, relied on, and brought up. Enable with the `--url-probe` flag.
+	*Solution*: Implement `URLStringProbe` where, if and only if this URL is successfully fetched (returning a 200 HTTP status code) without redirection, will the VPN service be required, relied on, and brought up. Enable with the `--url-probe` flag.
 
-	Workaround: Manually disable VPN-on-Demand in Settings.app > VPN > Server (i) option screen. Reenable only after Internet access is available.
+	*Workaround*: Manually disable VPN-on-Demand in Settings.app > VPN > Server (i) option screen. Reenable only after Internet access is available.
 
 ## TODO
 
