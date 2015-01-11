@@ -115,6 +115,7 @@ By enabling this option, you will need to reliably and quickly respond with HTTP
 ### Typical Usage
 	$ ovpnmcgen.rb gen --trusted-ssids home --host vpn.example.com \
 	--cafile path/to/ca.pem --tafile path/to/ta.key \
+	--url-probe http://vpn.example.com/status \
 	--p12file path/to/john-ipad.p12 --p12pass p12passphrase john ipad
 
 Output:
@@ -158,22 +159,30 @@ Output:
 						<array>
 							<string>home</string>
 						</array>
+						<key>URLStringProbe</key>
+						<string>http://vpn.example.com/status</string>
 					</dict>
 					<dict>
 						<key>Action</key>
 						<string>Connect</string>
 						<key>InterfaceTypeMatch</key>
 						<string>WiFi</string>
+						<key>URLStringProbe</key>
+						<string>http://vpn.example.com/status</string>
 					</dict>
 					<dict>
 						<key>Action</key>
 						<string>Ignore</string>
 						<key>InterfaceTypeMatch</key>
 						<string>Cellular</string>
+						<key>URLStringProbe</key>
+						<string>http://vpn.example.com/status</string>
 					</dict>
 					<dict>
 						<key>Action</key>
 						<string>Connect</string>
+						<key>URLStringProbe</key>
+						<string>http://vpn.example.com/status</string>
 					</dict>
 				</array>
 				<key>PayloadCertificateUUID</key>
@@ -263,6 +272,7 @@ Output:
 ### Extended Usage
 	$ ovpnmcgen.rb gen --trusted-ssids home,school --untrusted-ssids virusnet \
 	--host vpn.example.com --cafile path/to/ca.pem --tafile path/to/ta.key \
+	--url-probe http://vpn.example.com/status \
 	--p12file path/to/john-ipad.p12 --p12pass p12passphrase john ipad
 
 Output similar to above:
@@ -297,22 +307,30 @@ Output similar to above:
 						<array>
 							<string>virusnet</string>
 						</array>
+						<key>URLStringProbe</key>
+						<string>http://vpn.example.com/status</string>
 					</dict>
 					<dict>
 						<key>Action</key>
 						<string>Connect</string>
 						<key>InterfaceTypeMatch</key>
 						<string>WiFi</string>
+						<key>URLStringProbe</key>
+						<string>http://vpn.example.com/status</string>
 					</dict>
 					<dict>
 						<key>Action</key>
 						<string>Ignore</string>
 						<key>InterfaceTypeMatch</key>
 						<string>Cellular</string>
+						<key>URLStringProbe</key>
+						<string>http://vpn.example.com/status</string>
 					</dict>
 					<dict>
 						<key>Action</key>
 						<string>Connect</string>
+						<key>URLStringProbe</key>
+						<string>http://vpn.example.com/status</string>
 					</dict>
 				</array>
 				...
