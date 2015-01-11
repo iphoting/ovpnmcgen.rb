@@ -34,6 +34,7 @@ command :generate do |c|
   c.option '-t', '--trusted-ssids SSIDS', Array, 'List of comma-separated trusted SSIDs.'
   c.option '-u', '--untrusted-ssids SSIDS', Array, 'List of comma-separated untrusted SSIDs.'
   c.option '--url-probe URL', 'This URL must return HTTP status 200, without redirection, before the VPN service will try establishing.'
+  c.option '--remotes REMOTES', Array, 'List of comma-separated alternate remotes: "<host> <port> <proto>".'
   c.option '--ovpnconfigfile FILE', 'Path to OpenVPN client config file.'
   c.option '-o', '--output FILE', 'Output to file. [Default: stdout]'
   c.action do |args, options|
@@ -85,6 +86,7 @@ command :generate do |c|
     inputs[:ovpnconfigfile] = options.ovpnconfigfile || config.ovpnconfigfile if options.ovpnconfigfile or config.ovpnconfigfile
     inputs[:tafile] = options.tafile || config.tafile if options.tafile or config.tafile
     inputs[:url_probe] = options.url_probe || config.url_probe if options.url_probe or config.url_probe
+    inputs[:remotes] = options.remotes || config.remotes if options.remotes or config.remotes
 
     unless options.output
       puts Ovpnmcgen.generate(inputs)

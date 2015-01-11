@@ -60,6 +60,7 @@ Usage: ovpnmcgen.rb generate [options] <user> <device>
     -t, --trusted-ssids SSIDS List of comma-separated trusted SSIDs.
     -u, --untrusted-ssids SSIDS List of comma-separated untrusted SSIDs.
     --url-probe URL      This URL must return HTTP status 200, without redirection, before the VPN service will try establishing.
+    --remotes REMOTES	List of comma-separated alternate remotes: "<host> <port> <proto>".
     --ovpnconfigfile FILE Path to OpenVPN client config file.
     -o, --output FILE    Output to file. [Default: stdout]
 ```
