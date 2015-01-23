@@ -1,4 +1,4 @@
-- Unreleased
+= 0.5.0.pre / 2015-01-24
 	* Specify multiple remotes with `--remotes "host2 1194 tcp","host3 1195 udp"` flag.
 
 = 0.4.2 / 2014-07-05
