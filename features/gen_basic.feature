@@ -222,3 +222,19 @@ Feature: Basic Generate Functionality
 			<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 			<plist version="1.0">
 			"""
+
+	Scenario: The remotes flag is set with multiple hosts.
+		When I run `ovpnmcgen.rb g --host aruba.cucumber.org --cafile ca.crt --p12file p12file.p12 --remotes "1.example.org 1195 tcp","2.example.org 1196 tcp" cucumber aruba`
+		Then the output should match:
+			"""
+			<key>remote.1</key>
+			\s*<string>aruba.cucumber.org 1194 udp</string>
+			"""
+		And the output should match:
+			"""
+			<key>remote.2</key>
+			\s*<string>1.example.org 1195 tcp</string>
+			\s*<key>remote.3</key>
+			\s*<string>2.example.org 1196 tcp</string>
+			"""
+		And the output should not contain "<key>remote</key>"

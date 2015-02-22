@@ -60,6 +60,7 @@ Usage: ovpnmcgen.rb generate [options] <user> <device>
     -t, --trusted-ssids SSIDS List of comma-separated trusted SSIDs.
     -u, --untrusted-ssids SSIDS List of comma-separated untrusted SSIDs.
     --url-probe URL      This URL must return HTTP status 200, without redirection, before the VPN service will try establishing.
+    --remotes REMOTES	List of comma-separated alternate remotes: "<host> <port> <proto>".
     --ovpnconfigfile FILE Path to OpenVPN client config file.
     -o, --output FILE    Output to file. [Default: stdout]
 ```
@@ -114,6 +115,7 @@ By enabling this option, you will need to reliably and quickly respond with HTTP
 ### Typical Usage
 	$ ovpnmcgen.rb gen --trusted-ssids home --host vpn.example.com \
 	--cafile path/to/ca.pem --tafile path/to/ta.key \
+	--url-probe http://vpn.example.com/status \
 	--p12file path/to/john-ipad.p12 --p12pass p12passphrase john ipad
 
 Output:
@@ -157,22 +159,30 @@ Output:
 						<array>
 							<string>home</string>
 						</array>
+						<key>URLStringProbe</key>
+						<string>http://vpn.example.com/status</string>
 					</dict>
 					<dict>
 						<key>Action</key>
 						<string>Connect</string>
 						<key>InterfaceTypeMatch</key>
 						<string>WiFi</string>
+						<key>URLStringProbe</key>
+						<string>http://vpn.example.com/status</string>
 					</dict>
 					<dict>
 						<key>Action</key>
 						<string>Ignore</string>
 						<key>InterfaceTypeMatch</key>
 						<string>Cellular</string>
+						<key>URLStringProbe</key>
+						<string>http://vpn.example.com/status</string>
 					</dict>
 					<dict>
 						<key>Action</key>
 						<string>Connect</string>
+						<key>URLStringProbe</key>
+						<string>http://vpn.example.com/status</string>
 					</dict>
 				</array>
 				<key>PayloadCertificateUUID</key>
@@ -262,6 +272,7 @@ Output:
 ### Extended Usage
 	$ ovpnmcgen.rb gen --trusted-ssids home,school --untrusted-ssids virusnet \
 	--host vpn.example.com --cafile path/to/ca.pem --tafile path/to/ta.key \
+	--url-probe http://vpn.example.com/status \
 	--p12file path/to/john-ipad.p12 --p12pass p12passphrase john ipad
 
 Output similar to above:
@@ -296,22 +307,30 @@ Output similar to above:
 						<array>
 							<string>virusnet</string>
 						</array>
+						<key>URLStringProbe</key>
+						<string>http://vpn.example.com/status</string>
 					</dict>
 					<dict>
 						<key>Action</key>
 						<string>Connect</string>
 						<key>InterfaceTypeMatch</key>
 						<string>WiFi</string>
+						<key>URLStringProbe</key>
+						<string>http://vpn.example.com/status</string>
 					</dict>
 					<dict>
 						<key>Action</key>
 						<string>Ignore</string>
 						<key>InterfaceTypeMatch</key>
 						<string>Cellular</string>
+						<key>URLStringProbe</key>
+						<string>http://vpn.example.com/status</string>
 					</dict>
 					<dict>
 						<key>Action</key>
 						<string>Connect</string>
+						<key>URLStringProbe</key>
+						<string>http://vpn.example.com/status</string>
 					</dict>
 				</array>
 				...
@@ -334,27 +353,31 @@ Output similar to above:
 
 - "Not connected to Internet" error/behaviour when VPN should be established.
 
-	Diagnosis: Load any site in Safari. An error message "Safari cannot open the page because your iPhone is not connected to the Internet" will be presented.
+	*Diagnosis*: Load any site in Safari. An error message "Safari cannot open the page because your iPhone is not connected to the Internet" will be presented.
 
 	There is a bug in the iOS/OS X network routing code that hangs the routing system, preventing the gateway or IP address from being set. This happens more frequently when the tunnel is brought up/down more frequently.
 
-	Workaround: Hard-restart iOS. Press and hold down both the home and sleep/wake buttons until iOS turns off and back on with the Apple boot up screen. Release when the Apple boot up screen appears.
+	*Solution*: Upgrade to iOS 8.1. The new iOS update seems to have mostly solved issues surrounding the networking stack.
+
+	*Workaround*: Hard-restart iOS. Press and hold down both the home and sleep/wake buttons until iOS turns off and back on with the Apple boot up screen. Release when the Apple boot up screen appears.
 
 - Weird Rapid Connecting…/Disconnected behaviour.
 
-	Diagnosis: VPN status in Settings.app rapid alternates between Connecting… and Disconnected.
+	*Diagnosis*: VPN status in Settings.app rapid alternates between Connecting… and Disconnected.
 
 	Usually happens when the VoD component is stuck in an infinite loop. Not sure what triggers it.
 
-	Workaround: Hard-restart iOS. Press and hold down both the home and sleep/wake buttons until iOS turns off and back on with the Apple boot up screen. Release when the Apple boot up screen appears.
+	*Solution*: Upgrade to iOS 8.1. The new iOS update seems to have mostly solved issues surrounding the networking stack.
+
+	*Workaround*: Hard-restart iOS. Press and hold down both the home and sleep/wake buttons until iOS turns off and back on with the Apple boot up screen. Release when the Apple boot up screen appears.
 
 - Cannot load Captive Portals (Hotspots on unsecured Wireless networks).
 
 	Some unsecured hotspots require navigating certain webpages before full access to the internet is available. This requirement blocks VPN connections and iOS will also block captive portal access, waiting on the VPN connection. This circular dependency results in no internet access.
 
-	Workaround: Manually disable VPN-on-Demand in Settings.app > VPN > Server (i) option screen. Reenable only after Internet access is available.
+	*Solution*: Implement `URLStringProbe` where, if and only if this URL is successfully fetched (returning a 200 HTTP status code) without redirection, will the VPN service be required, relied on, and brought up. Enable with the `--url-probe` flag.
 
-	Solution: Implement `URLStringProbe` where, if and only if this URL is successfully fetched (returning a 200 HTTP status code) without redirection, will the VPN service be required, relied on, and brought up. Enable with the `--url-probe` flag.
+	*Workaround*: Manually disable VPN-on-Demand in Settings.app > VPN > Server (i) option screen. Reenable only after Internet access is available.
 
 ## TODO
 

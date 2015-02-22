@@ -17,10 +17,12 @@ module Ovpnmcgen
     p12pass = inputs[:p12pass] || ''
     trusted_ssids = inputs[:trusted_ssids] || false
     untrusted_ssids = inputs[:untrusted_ssids] || false
+    remotes = inputs[:remotes] || false
 
     # Ensure [un]trusted_ssids are Arrays.
     trusted_ssids = Array(trusted_ssids) if trusted_ssids
     untrusted_ssids = Array(untrusted_ssids) if untrusted_ssids
+    remotes = Array(remotes) if remotes
 
     begin
       ca_cert = File.readlines(inputs[:cafile]).map { |x| x.chomp }.join('\n')
@@ -53,7 +55,14 @@ module Ovpnmcgen
         'remote-cert-tls' => 'server'
       }
     end
-    ovpnconfighash['remote'] = "#{host} #{port} #{proto}"
+    if remotes
+      ovpnconfighash['remote.1'] = "#{host} #{port} #{proto}"
+      remotes.each_with_index do |r, i|
+        ovpnconfighash["remote.#{i+2}"] = r
+      end
+    else
+      ovpnconfighash['remote'] = "#{host} #{port} #{proto}"
+    end
     ovpnconfighash['ca'] = ca_cert
     ovpnconfighash['tls-auth'] = tls_auth if inputs[:tafile]
     ovpnconfighash['key-direction'] = '1' if inputs[:tafile]
