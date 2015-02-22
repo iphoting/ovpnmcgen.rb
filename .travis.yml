@@ -26,4 +26,4 @@ deploy:
   on:
     tags: true
     repo: "iphoting/ovpnmcgen.rb"
-    branch: master
+    ruby: 2.0.0
