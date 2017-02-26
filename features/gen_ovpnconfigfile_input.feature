@@ -148,10 +148,10 @@ Feature: Generate Functionality From Supplied OpenVPN Config File
 
 	Scenario: A decent openvpn config file is specified.
 		When I run `ovpnmcgen.rb g --host aruba.cucumber.org --cafile ca.crt --p12file p12file.p12 --ovpnconfigfile clean.ovpn cucumber aruba`
-		Then the output should contain:
+		Then the output should match:
 			"""
-			<?xml version="1.0" encoding="UTF-8"?>
-			<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+			<\?xml version="1.0" encoding="UTF-8"\?>
+			<!DOCTYPE plist PUBLIC "-\/\/Apple*\/\/DTD PLIST 1.0\/\/EN" "http:\/\/www.apple.com\/DTDs\/PropertyList-1.0.dtd">
 			<plist version="1.0">
 			"""
 		And the output should contain "aruba.cucumber.org 1194 udp"

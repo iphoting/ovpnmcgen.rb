@@ -51,10 +51,10 @@ Feature: Basic Generate Functionality
 		And the output should not contain "error: Host"
 		And the output should not contain "error: cafile"
 		And the output should not contain "error: PKCS#12"
-		Then the output should contain:
+		Then the output should match:
 			"""
-			<?xml version="1.0" encoding="UTF-8"?>
-			<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+			<\?xml version="1.0" encoding="UTF-8"\?>
+			<!DOCTYPE plist PUBLIC "-\/\/Apple*\/\/DTD PLIST 1.0\/\/EN" "http:\/\/www.apple.com\/DTDs\/PropertyList-1.0.dtd">
 			<plist version="1.0">
 			"""
 		And the output should match:
@@ -219,7 +219,9 @@ Feature: Basic Generate Functionality
 		And the file "fileout.mobileconfig" should contain:
 			"""
 			<?xml version="1.0" encoding="UTF-8"?>
-			<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+			"""
+		And the file "fileout.mobileconfig" should contain:
+			"""
 			<plist version="1.0">
 			"""
 
