@@ -1,3 +1,6 @@
+= 0.6.0 / Unreleased
+	* Added support for `DNSDomainMatch`, via `--domains`.
+
 = 0.5.0 / 2015-02-22
 	* Specify multiple remotes with `--remotes "host2 1194 tcp","host3 1195 udp"` flag.
 

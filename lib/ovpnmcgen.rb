@@ -18,11 +18,13 @@ module Ovpnmcgen
     trusted_ssids = inputs[:trusted_ssids] || false
     untrusted_ssids = inputs[:untrusted_ssids] || false
     remotes = inputs[:remotes] || false
+    vodDomains = inputs[:domains] || false
 
     # Ensure [un]trusted_ssids are Arrays.
     trusted_ssids = Array(trusted_ssids) if trusted_ssids
     untrusted_ssids = Array(untrusted_ssids) if untrusted_ssids
     remotes = Array(remotes) if remotes
+    vodDomains = Array(vodDomains) if vodDomains
 
     begin
       ca_cert = File.readlines(inputs[:cafile]).map { |x| x.chomp }.join('\n')
@@ -87,6 +89,10 @@ module Ovpnmcgen
           'Ignore'
         end
     }
+    vodDomainOnly = { # When a domain is searched, bring up VPN
+      'Action' => 'Connect',
+      'DNSDomainMatch' => vodDomains
+    }
     vodCellularOnly = { # Trust Cellular
       'InterfaceTypeMatch' => 'Cellular',
       'Action' => case inputs[:security_level]
@@ -106,13 +112,14 @@ module Ovpnmcgen
     vodTrusted['URLStringProbe'] =
       vodUntrusted['URLStringProbe'] =
       vodWifiOnly['URLStringProbe'] =
+      vodDomainOnly['URLStringProbe'] =
       vodCellularOnly['URLStringProbe'] =
       vodDefault['URLStringProbe'] =
       inputs[:url_probe] if inputs[:url_probe]
 
     vpnOnDemandRules << vodTrusted if trusted_ssids
     vpnOnDemandRules << vodUntrusted if untrusted_ssids
-    vpnOnDemandRules << vodWifiOnly << vodCellularOnly << vodDefault
+    vpnOnDemandRules << vodWifiOnly << vodDomainOnly << vodCellularOnly << vodDefault
     vpnOnDemandRules << { # Default catch-all when URLStringProbe is enabled and returns false to prevent circular race.
       'Action' => 'Ignore'
       } if inputs[:url_probe]
