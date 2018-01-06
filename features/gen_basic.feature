@@ -240,24 +240,3 @@ Feature: Basic Generate Functionality
 			\s*<string>2.example.org 1196 tcp</string>
 			"""
 		And the output should not contain "<key>remote</key>"
-
-	Scenario: The domains flag is set with one domain.
-		When I run `ovpnmcgen.rb g --host aruba.cucumber.org --cafile ca.crt --p12file p12file.p12 --domains "example.com" cucumber aruba`
-		Then the output should match:
-			"""
-			<key>DNSDomainMatch</key>
-			\s*<array>
-			\s*<string>example\.com</string>
-			\s*</array>
-			"""
-
-	Scenario: The domains flag is set with multiple domains.
-		When I run `ovpnmcgen.rb g --host aruba.cucumber.org --cafile ca.crt --p12file p12file.p12 --domains "*.example.com,example.com" cucumber aruba`
-		Then the output should match:
-			"""
-			<key>DNSDomainMatch</key>
-			\s*<array>
-			\s*<string>\*\.example\.com</string>
-			\s*<string>example\.com</string>
-			\s*</array>
-			"""
