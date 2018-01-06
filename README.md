@@ -59,6 +59,8 @@ Usage: ovpnmcgen.rb generate [options] <user> <device>
     --cert-uuid UUID     Override a Certificate payload UUID.
     -t, --trusted-ssids SSIDS List of comma-separated trusted SSIDs.
     -u, --untrusted-ssids SSIDS List of comma-separated untrusted SSIDs.
+    -d, --domains DOMAINS List of comma-separated domain names requiring VPN service.
+    --domain-probe-url PROBE An HTTP(S) URL to probe, using a GET request. If no HTTP response code is received from the server, a VPN connection is established in response.
     --url-probe URL      This URL must return HTTP status 200, without redirection, before the VPN service will try establishing.
     --remotes REMOTES	List of comma-separated alternate remotes: "<host> <port> <proto>".
     --ovpnconfigfile FILE Path to OpenVPN client config file.
@@ -109,6 +111,13 @@ Apple provides a `URLStringProbe` test condition where a VPN connection will onl
 This feature can be enabled for statistical and maintenance-protection reasons. Otherwise, it can also workaround a circular limitation with unsecured wireless captive portals. See Known Issues below for further elaboration.
 
 By enabling this option, you will need to reliably and quickly respond with HTTP status code 200 at the URL string supplied.
+
+### Domain Matching
+To require an iOS device to bring up the VPN when `example.com` is requested is not so easy, especially if it is has a publicly accessible DNS resolution. 
+
+Apple provides an `EvaluateConnection` and `ActionParameters` configuration options with the view that certain domains will have DNS resolution failures, and hence, require the VPN to be up. In most corporate cases with internal-facing hostnames, it works well. See the `--domains` option.
+
+However, if there are certain sensitive public sites (or blocked sites) that you decide that a VPN should be brought up instead, you will need to additionally specify a `RequiredURLStringProbe` that returns a non-200 response. See the `--domain-probe-url` option.
 
 ## Examples
 

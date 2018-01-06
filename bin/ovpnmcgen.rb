@@ -33,6 +33,8 @@ command :generate do |c|
   c.option '--cert-uuid UUID', 'Override a Certificate payload UUID.'
   c.option '-t', '--trusted-ssids SSIDS', Array, 'List of comma-separated trusted SSIDs.'
   c.option '-u', '--untrusted-ssids SSIDS', Array, 'List of comma-separated untrusted SSIDs.'
+  c.option '-d', '--domains DOMAINS', Array, 'List of comma-separated domain names requiring VPN service.'
+  c.option '--domain-probe-url PROBE', String, 'An HTTP(S) URL to probe, using a GET request. If no HTTP response code is received from the server, a VPN connection is established in response.'
   c.option '--url-probe URL', 'This URL must return HTTP status 200, without redirection, before the VPN service will try establishing.'
   c.option '--remotes REMOTES', Array, 'List of comma-separated alternate remotes: "<host> <port> <proto>".'
   c.option '--ovpnconfigfile FILE', 'Path to OpenVPN client config file.'
@@ -87,6 +89,8 @@ command :generate do |c|
     inputs[:tafile] = options.tafile || config.tafile if options.tafile or config.tafile
     inputs[:url_probe] = options.url_probe || config.url_probe if options.url_probe or config.url_probe
     inputs[:remotes] = options.remotes || config.remotes if options.remotes or config.remotes
+    inputs[:domains] = options.domains || config.domains if options.domains or config.domains
+    inputs[:domain_probe_url] = options.domain_probe_url || config.domain_probe_url if options.domain_probe_url or config.domain_probe_url
 
     unless options.output
       puts Ovpnmcgen.generate(inputs)
