@@ -68,6 +68,7 @@ module Ovpnmcgen
     ovpnconfighash['ca'] = ca_cert
     ovpnconfighash['tls-auth'] = tls_auth if inputs[:tafile]
     ovpnconfighash['key-direction'] = '1' if inputs[:tafile]
+    ovpnconfighash['vpn-on-demand'] = '0' unless enableVOD
 
     vpnOnDemandRules = Array.new
     vodTrusted = { # Trust only Wifi SSID
