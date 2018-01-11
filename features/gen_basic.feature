@@ -16,6 +16,20 @@ Feature: Basic Generate Functionality
 			p12file that should appear
 			In base64 encoding as <data/>
 			"""
+		And a file named "cert.crt" with:
+			"""
+			Contents of cert file
+			With newlines
+			And more newlines
+			That should appear as one line
+			"""
+		And a file named "key.pem" with:
+			"""
+			Contents of key file
+			With newlines
+			And more newlines
+			That should appear as one line
+			"""
 
 	Scenario: I need help
 		When I run `ovpnmcgen.rb help g`
@@ -46,7 +60,14 @@ Feature: Basic Generate Functionality
 		And the output should not contain "error: cafile"
 		Then the output should contain "error: "
 
-	Scenario: Correct arguments will all required flags, host, cafile, p12file.
+	@v0.6.0
+	Scenario: Correct arguments with all required flags, host, cafile, except (either p12file or (cert and key)).
+		When I run `ovpnmcgen.rb g --host aruba.cucumber.org --cafile ca.crt --p12file p12file.p12 cucumber aruba`
+		And the output should not contain "error: Host"
+		And the output should not contain "error: cafile"
+		Then the output should contain "error: PKCS#12 or cert & key missing"
+
+	Scenario: Correct arguments with all required flags, host, cafile, and p12file (no cert and key).
 		When I run `ovpnmcgen.rb g --host aruba.cucumber.org --cafile ca.crt --p12file p12file.p12 cucumber aruba`
 		And the output should not contain "error: Host"
 		And the output should not contain "error: cafile"
@@ -76,6 +97,44 @@ Feature: Basic Generate Functionality
 			\s*cDEyZmlsZSB0aGF0IHNob3VsZCBhcHBlYXIKSW4gYmFzZTY0IGVuY29kaW5n
 			\s*IGFzIDxkYXRhLz4=
 			\s*</data>
+			"""
+		And the output should match:
+			"""
+			<key>OnDemandEnabled</key>
+			\s*<integer>1</integer>
+			"""
+
+	@OCv1.2 @v0.6.0
+	Scenario: Correct arguments with all required flags, host, cafile, cert, and key (no p12file).
+		When I run `ovpnmcgen.rb g --host aruba.cucumber.org --cafile ca.crt --cert cert.crt --key key.pem cucumber aruba`
+		And the output should not contain "error: Host"
+		And the output should not contain "error: cafile"
+		And the output should not contain "error: PKCS#12 or cert & key missing"
+		Then the output should match:
+			"""
+			<\?xml version="1.0" encoding="UTF-8"\?>
+			<!DOCTYPE plist PUBLIC "-\/\/Apple*\/\/DTD PLIST 1.0\/\/EN" "http:\/\/www.apple.com\/DTDs\/PropertyList-1.0.dtd">
+			<plist version="1.0">
+			"""
+		And the output should match:
+			"""
+			<key>remote</key>
+			\s*<string>aruba.cucumber.org 1194 udp</string>
+			"""
+		And the output should match:
+			"""
+			<key>ca</key>
+			\s*<string>Contents of CA file\\nWith newlines\\nAnd more newlines\\nThat should appear as one line</string>
+			"""
+		And the output should match:
+			"""
+			<key>cert</key>
+			\s*<string>Contents of cert file\\nWith newlines\\nAnd more newlines\\nThat should appear as one line</string>
+			"""
+		And the output should match:
+			"""
+			<key>key</key>
+			\s*<string>Contents of key file\\nWith newlines\\nAnd more newlines\\nThat should appear as one line</string>
 			"""
 		And the output should match:
 			"""
@@ -114,12 +173,49 @@ Feature: Basic Generate Functionality
 			\s*<string>aruba.cucumber.org 1234 tcp</string>
 			"""
 
+	@OCv1.2 @v0.6.0
 	Scenario: The no-vod flag is set.
 		When I run `ovpnmcgen.rb g --host aruba.cucumber.org --cafile ca.crt --p12file p12file.p12 --no-vod cucumber aruba`
 		Then the output should match:
 			"""
 			<key>OnDemandEnabled</key>
 			\s*<integer>0</integer>
+			"""
+		And the output should match:
+			"""
+			<key>vpn-on-demand</key>
+			\s*<string>0</string>
+			"""
+
+	Scenario: The no-vod flag is not set.
+		When I run `ovpnmcgen.rb g --host aruba.cucumber.org --cafile ca.crt --p12file p12file.p12 cucumber aruba`
+		Then the output should match:
+			"""
+			<key>OnDemandEnabled</key>
+			\s*<integer>1</integer>
+			"""
+		And the output should not match:
+			"""
+			<key>vpn-on-demand</key>
+			\s*<string>0</string>
+			"""
+
+	@OCv1.2 @v0.6.0
+	Scenario: The 1.2 flag is set.
+		When I run `ovpnmcgen.rb g --host aruba.cucumber.org --cafile ca.crt --p12file p12file.p12 --1.2 cucumber aruba`
+		Then the output should match:
+			"""
+			<key>VPNSubType</key>
+			\s*<string>net.openvpn.connect.app</string>
+			"""
+
+	@OCv1.2 @v0.6.0
+	Scenario: The 1.2 flag is not set.
+		When I run `ovpnmcgen.rb g --host aruba.cucumber.org --cafile ca.crt --p12file p12file.p12 cucumber aruba`
+		Then the output should match:
+			"""
+			<key>VPNSubType</key>
+			\s*<string>net.openvpn.OpenVPN-Connect.vpnplugin</string>
 			"""
 
 	Scenario: The url-probe flag is set.
