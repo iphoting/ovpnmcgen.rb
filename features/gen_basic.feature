@@ -202,7 +202,7 @@ Feature: Basic Generate Functionality
 
 	@OCv1.2 @v0.6.0
 	Scenario: The 1.2 flag is set.
-		When I run `ovpnmcgen.rb g --host aruba.cucumber.org --cafile ca.crt --p12file p12file.p12 --1.2 cucumber aruba`
+		When I run `ovpnmcgen.rb g --host aruba.cucumber.org --cafile ca.crt --p12file p12file.p12 --v12compat cucumber aruba`
 		Then the output should match:
 			"""
 			<key>VPNSubType</key>

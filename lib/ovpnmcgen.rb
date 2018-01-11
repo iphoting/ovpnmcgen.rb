@@ -165,7 +165,7 @@ module Ovpnmcgen
         'PayloadCertificateUUID' => certUUID,
         'RemoteAddress' => 'DEFAULT'
       },
-      'VPNSubType' => 'net.openvpn.OpenVPN-Connect.vpnplugin',
+      'VPNSubType' => (inputs[:v12compat])? 'net.openvpn.connect.app' : 'net.openvpn.OpenVPN-Connect.vpnplugin',
       'VPNType' => 'VPN',
       'VendorConfig' => ovpnconfighash
     }

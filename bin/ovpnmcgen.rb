@@ -27,6 +27,7 @@ command :generate do |c|
   c.option '--p12file FILE', 'Path to user PKCS#12 file. (Required)'
   c.option '--p12pass PASSWORD', 'Password to unlock PKCS#12 file.'
   c.option '--[no-]vod', 'Enable or Disable VPN-On-Demand. [Default: Enabled]'
+  c.option '--v12compat', 'Enable OpenVPN Connect 1.2.x compatibility. [Default: Disabled]'
   c.option '--security-level LEVEL', 'Security level of VPN-On-Demand Behaviour: paranoid, high, medium. [Default: high]'
   c.option '--vpn-uuid UUID', 'Override a VPN configuration payload UUID.'
   c.option '--profile-uuid UUID', 'Override a Profile UUID.'
@@ -91,6 +92,7 @@ command :generate do |c|
     inputs[:remotes] = options.remotes || config.remotes if options.remotes or config.remotes
     inputs[:domains] = options.domains || config.domains if options.domains or config.domains
     inputs[:domain_probe_url] = options.domain_probe_url || config.domain_probe_url if options.domain_probe_url or config.domain_probe_url
+    inputs[:v12compat] = options.v12compat || config.v12compat if options.v12compat or config.v12compat
 
     unless options.output
       puts Ovpnmcgen.generate(inputs)

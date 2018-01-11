@@ -53,6 +53,7 @@ Usage: ovpnmcgen.rb generate [options] <user> <device>
     --p12file FILE       Path to user PKCS#12 file. (Required)
     --p12pass PASSWORD   Password to unlock PKCS#12 file.
     --[no-]vod           Enable or Disable VPN-On-Demand. [Default: Enabled]
+    --v12compat          Enable OpenVPN Connect 1.2.x compatibility. [Default: Disabled]
     --security-level LEVEL Security level of VPN-On-Demand Behaviour: paranoid, high, medium. [Default: high]
     --vpn-uuid UUID      Override a VPN configuration payload UUID.
     --profile-uuid UUID  Override a Profile UUID.
