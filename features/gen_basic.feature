@@ -62,10 +62,10 @@ Feature: Basic Generate Functionality
 
 	@v0.6.0
 	Scenario: Correct arguments with all required flags, host, cafile, except (either p12file or (cert and key)).
-		When I run `ovpnmcgen.rb g --host aruba.cucumber.org --cafile ca.crt --p12file p12file.p12 cucumber aruba`
+		When I run `ovpnmcgen.rb g --host aruba.cucumber.org --cafile ca.crt cucumber aruba`
 		And the output should not contain "error: Host"
 		And the output should not contain "error: cafile"
-		Then the output should contain "error: PKCS#12 or cert & key missing"
+		Then the output should contain "error: PKCS#12 or cert & key"
 
 	Scenario: Correct arguments with all required flags, host, cafile, and p12file (no cert and key).
 		When I run `ovpnmcgen.rb g --host aruba.cucumber.org --cafile ca.crt --p12file p12file.p12 cucumber aruba`
@@ -109,7 +109,7 @@ Feature: Basic Generate Functionality
 		When I run `ovpnmcgen.rb g --host aruba.cucumber.org --cafile ca.crt --cert cert.crt --key key.pem cucumber aruba`
 		And the output should not contain "error: Host"
 		And the output should not contain "error: cafile"
-		And the output should not contain "error: PKCS#12 or cert & key missing"
+		And the output should not contain "error: PKCS#12 or cert & key"
 		Then the output should match:
 			"""
 			<\?xml version="1.0" encoding="UTF-8"\?>
@@ -140,6 +140,14 @@ Feature: Basic Generate Functionality
 			"""
 			<key>OnDemandEnabled</key>
 			\s*<integer>1</integer>
+			"""
+		And the output should not match:
+			"""
+			<key>AuthenticationMethod</key>
+			"""
+		And the output should not match:
+			"""
+			<key>PayloadCertificateUUID</key>
 			"""
 
 	Scenario: The p12pass flag is set.

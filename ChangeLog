@@ -1,7 +1,7 @@
 = 0.6.0 / Unreleased
 	* Added support for `EvaluateConnection`, `Domains`, via `--domains`. It will include an `ActionParameters` dict containing `Domains`, and if `--domain-probe-url` is set, also contains `RequiredURLStringProbe`.
-	* Added support for updated bundle identifier `net.openvpn.connect.app` (changed since OpenVPN Connect 1.2.x), via `--v12compat`.
-	* Added support for `--cert` and `--key` for inline attachment of certificate and key, to workaround bug in OpenVPN Connect 1.2.5, mutually exclusive with `--p12file`.
+	* Added support for updated bundle identifier (VPNSubType) `net.openvpn.connect.app` (changed since OpenVPN Connect 1.2.x), via `--v12compat`.
+	* Added support for `--cert` and `--key` for inline attachment of certificate and key, to workaround bug in OpenVPN Connect 1.2.5.
 	* Added support for `vpn-on-demand: 0` key/value pair when `--no-vod` is set, so that OpenVPN Connect can control this profile.
 
 = 0.5.0 / 2015-02-22

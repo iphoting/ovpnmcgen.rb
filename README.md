@@ -47,10 +47,12 @@ Usage: ovpnmcgen.rb generate [options] <user> <device>
     -c, --config FILE    Specify path to config file. [Default: .ovpnmcgen.rb.yml]
     --cafile FILE        Path to OpenVPN CA file. (Required)
     --tafile FILE        Path to TLS-Auth Key file.
+    --cert FILE          Path to Cert file.
+    --key FILE           Path to Private Key file.
     --host HOSTNAME      Hostname of OpenVPN server. (Required)
     --proto PROTO        OpenVPN server protocol. [Default: udp]
     -p, --port PORT      OpenVPN server port. [Default: 1194]
-    --p12file FILE       Path to user PKCS#12 file. (Required)
+    --p12file FILE       Path to user PKCS#12 file.
     --p12pass PASSWORD   Password to unlock PKCS#12 file.
     --[no-]vod           Enable or Disable VPN-On-Demand. [Default: Enabled]
     --v12compat          Enable OpenVPN Connect 1.2.x compatibility. [Default: Disabled]
@@ -359,7 +361,25 @@ Output similar to above:
 	-inkey path/to/john-ipad.key -in path/to/john-ipad.crt \
 	-passout pass:p12passphrase -name john-ipad@vpn.example.com
 
+### Using OpenSSL to convert from PKCS#12 (.p12) to Cert PEM file
+	openssl pkcs12 -in path/to/john-ipad.p12 -out path/to/john-ipad-cert.crt \
+	-nodes -nokeys
+
+### Using OpenSSL to convert from PKCS#12 (.p12) to Key PEM file
+	openssl pkcs12 -in path/to/john-ipad.p12 -out path/to/john-ipad-key.pem \
+	-nodes -nocerts
+
 ## Known Issues
+
+- OpenVPN Connect v1.2.5 breaking changes
+
+	*Diagnosis*: Certificates no longer found or VoD mobileconfig broken after OpenVPN Connect upgrade to v1.2.5.
+
+	The VPN switch in the Settings.app jumps rapidly from On to Off, status switches from Connecting... to Disconnected immediately. No logs produced within the OpernVPN Connect app log viewer.
+
+	This is caused by 1) a breaking change, where the `VPNSubType` has changed, and 2) a bug where the OpenVPN Connect is missing a keychain access entitlement from Apple.
+
+	*Solution + Workaround*: Enable the `--v12compat` switch to resolve (1), and use `--cert` and `--key` switches to workaround (2).
 
 - "Not connected to Internet" error/behaviour when VPN should be established.
 

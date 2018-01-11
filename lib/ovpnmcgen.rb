@@ -41,11 +41,25 @@ module Ovpnmcgen
     end if inputs[:tafile]
 
     begin
+      cert_file = File.readlines(inputs[:cert]).map { |x| x.chomp }.join('\n')
+    rescue Errno::ENOENT
+      puts "Cert file not found: #{inputs[:cert]}!"
+      exit
+    end if inputs[:cert]
+
+    begin
+      key_file = File.readlines(inputs[:key]).map { |x| x.chomp }.join('\n')
+    rescue Errno::ENOENT
+      puts "Key file not found: #{inputs[:key]}!"
+      exit
+    end if inputs[:key]
+
+    begin
       p12file = Base64.encode64(File.read(inputs[:p12file]))
     rescue Errno::ENOENT
       puts "PKCS#12 file not found: #{inputs[:p12file]}!"
       exit
-    end
+    end if inputs[:p12file]
 
     unless inputs[:ovpnconfigfile].nil?
       ovpnconfighash = Ovpnmcgen.getOVPNVendorConfigHash(inputs[:ovpnconfigfile])
@@ -68,6 +82,8 @@ module Ovpnmcgen
     ovpnconfighash['ca'] = ca_cert
     ovpnconfighash['tls-auth'] = tls_auth if inputs[:tafile]
     ovpnconfighash['key-direction'] = '1' if inputs[:tafile]
+    ovpnconfighash['cert'] = cert_file if inputs[:cert]
+    ovpnconfighash['key'] = key_file if inputs[:key]
     ovpnconfighash['vpn-on-demand'] = '0' unless enableVOD
 
     vpnOnDemandRules = Array.new
@@ -147,7 +163,7 @@ module Ovpnmcgen
       'PayloadType' => 'com.apple.security.pkcs12',
       'PayloadUUID' => certUUID,
       'PayloadVersion' => 1
-    }
+    } if p12file
 
     vpn = {
       'PayloadDescription' => "Configures VPN settings, including authentication.",
@@ -169,8 +185,13 @@ module Ovpnmcgen
       'VPNType' => 'VPN',
       'VendorConfig' => ovpnconfighash
     }
+    unless p12file
+      vpn['VPN'].delete('AuthenticationMethod')
+      vpn['VPN'].delete('PayloadCertificateUUID')
+    end
 
-    plistPayloadContent = [vpn, cert] # to encrypt this array
+    plistPayloadContent = [vpn]
+    plistPayloadContent << cert if p12file
     #encPlistPayloadContent = cmsEncrypt([vpn, cert].to_plist).der_format
 
     plist = {
