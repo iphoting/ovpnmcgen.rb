@@ -43,7 +43,7 @@ module Ovpnmcgen
     begin
       p12file = Base64.encode64(File.read(inputs[:p12file]))
     rescue Errno::ENOENT
-      puts "PCKS#12 file not found: #{inputs[:p12file]}!"
+      puts "PKCS#12 file not found: #{inputs[:p12file]}!"
       exit
     end
 
@@ -128,7 +128,9 @@ module Ovpnmcgen
 
     vpnOnDemandRules << vodTrusted if trusted_ssids
     vpnOnDemandRules << vodUntrusted if untrusted_ssids
-    vpnOnDemandRules << vodWifiOnly << vodDomainOnly << vodCellularOnly << vodDefault
+    vpnOnDemandRules << vodWifiOnly
+    vpnOnDemandRules << vodDomainOnly if vodDomains
+    vpnOnDemandRules << vodCellularOnly << vodDefault
     vpnOnDemandRules << { # Default catch-all when URLStringProbe is enabled and returns false to prevent circular race.
       'Action' => 'Ignore'
       } if inputs[:url_probe]

@@ -241,6 +241,25 @@ Feature: Basic Generate Functionality
 			"""
 		And the output should not contain "<key>remote</key>"
 
+	Scenario: The domains flag is not set.
+		When I run `ovpnmcgen.rb g --host aruba.cucumber.org --cafile ca.crt --p12file p12file.p12 cucumber aruba`
+		Then the output should not match:
+			"""
+			<key>Action</key>
+			\s*<string>EvaluateConnection</string>
+			"""
+		And the output should not match:
+			"""
+			<key>ActionParameters</key>
+			\s*<array>
+			\s*<dict>
+			\s*<key>DomainAction</key>
+			\s*<string>ConnectIfNeeded</string>
+			\s*<key>Domains</key>
+			\s*</dict>
+			\s*</array>
+			"""
+
 	Scenario: The domains flag is set with one domain.
 		When I run `ovpnmcgen.rb g --host aruba.cucumber.org --cafile ca.crt --p12file p12file.p12 --domains "example.com" cucumber aruba`
 		Then the output should match:
@@ -286,7 +305,7 @@ Feature: Basic Generate Functionality
 			\s*</array>
 			"""
 
-Scenario: The domains flag is set with multiple domains and domain probe URL is set.
+	Scenario: The domains flag is set with multiple domains and domain probe URL is set.
 		When I run `ovpnmcgen.rb g --host aruba.cucumber.org --cafile ca.crt --p12file p12file.p12 --domains "*.example.com,example.com" --domain-probe-URL "https://example.com/404.html" cucumber aruba`
 		Then the output should match:
 			"""
