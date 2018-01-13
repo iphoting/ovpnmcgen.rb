@@ -186,7 +186,8 @@ module Ovpnmcgen
       'VendorConfig' => ovpnconfighash
     }
     unless p12file
-      vpn['VPN'].delete('AuthenticationMethod')
+      vpn['VPN']['AuthName'] = "#{user}-#{device}"
+      vpn['VPN']['AuthenticationMethod'] = 'Password'
       vpn['VPN'].delete('PayloadCertificateUUID')
     end
 

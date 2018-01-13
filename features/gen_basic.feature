@@ -80,6 +80,11 @@ Feature: Basic Generate Functionality
 			"""
 		And the output should match:
 			"""
+			<key>AuthenticationMethod</key>
+			\s*<string>Certificate</string>
+			"""
+		And the output should match:
+			"""
 			<key>remote</key>
 			\s*<string>aruba.cucumber.org 1194 udp</string>
 			"""
@@ -118,6 +123,16 @@ Feature: Basic Generate Functionality
 			"""
 		And the output should match:
 			"""
+			<key>AuthenticationMethod</key>
+			\s*<string>Password</string>
+			"""
+		And the output should match:
+			"""
+			<key>AuthName</key>
+			\s*<string>cucumber-aruba</string>
+			"""
+		And the output should match:
+			"""
 			<key>remote</key>
 			\s*<string>aruba.cucumber.org 1194 udp</string>
 			"""
@@ -140,10 +155,6 @@ Feature: Basic Generate Functionality
 			"""
 			<key>OnDemandEnabled</key>
 			\s*<integer>1</integer>
-			"""
-		And the output should not match:
-			"""
-			<key>AuthenticationMethod</key>
 			"""
 		And the output should not match:
 			"""
