@@ -33,7 +33,7 @@ Feature: Basic Generate Functionality
 
 	Scenario: I need help
 		When I run `ovpnmcgen.rb help g`
-		Then the output should contain "Usage:"
+		Then the output should contain "Usage"
 
 	Scenario: Missing 2 arguments
 		When I run `ovpnmcgen.rb g`

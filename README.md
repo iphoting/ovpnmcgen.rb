@@ -54,8 +54,11 @@ Usage: ovpnmcgen.rb generate [options] <user> <device>
     -p, --port PORT      OpenVPN server port. [Default: 1194]
     --p12file FILE       Path to user PKCS#12 file.
     --p12pass PASSWORD   Password to unlock PKCS#12 file.
-    --[no-]vod           Enable or Disable VPN-On-Demand. [Default: Enabled]
-    --v12compat          Enable OpenVPN Connect 1.2.x compatibility. [Default: Disabled]
+    --[no-]vod           Enable or Disable VPN-On-Demand. 
+                         When Disabled, sets `vpn-on-demand: 0`, so that OpenVPN Connect can control this profile. [Default: Enabled]
+    --v12compat          Enable OpenVPN Connect 1.2.x compatibility. 
+                         When Enabled, use updated `VPNSubType: net.openvpn.connect.app` 
+                         (changed since OpenVPN Connect 1.2.x). [Default: Disabled]
     --security-level LEVEL Security level of VPN-On-Demand Behaviour: paranoid, high, medium. [Default: high]
     --vpn-uuid UUID      Override a VPN configuration payload UUID.
     --profile-uuid UUID  Override a Profile UUID.
@@ -125,10 +128,15 @@ However, if there are certain sensitive public sites (or blocked sites) that you
 ## Examples
 
 ### Typical Usage
-	$ ovpnmcgen.rb gen --trusted-ssids home --host vpn.example.com \
-	--cafile path/to/ca.pem --tafile path/to/ta.key \
+	$ ovpnmcgen.rb gen --v12compat \
+	--trusted-ssids home \
+	--host vpn.example.com \
+	--cafile path/to/ca.pem \
+	--tafile path/to/ta.key \
 	--url-probe http://vpn.example.com/status \
-	--p12file path/to/john-ipad.p12 --p12pass p12passphrase john ipad
+	--p12file path/to/john-ipad.p12 \
+	--p12pass p12passphrase \
+	john ipad
 
 Output:
 
@@ -203,7 +211,7 @@ Output:
 				<string>DEFAULT</string>
 			</dict>
 			<key>VPNSubType</key>
-			<string>net.openvpn.OpenVPN-Connect.vpnplugin</string>
+			<string>net.openvpn.connect.app</string>
 			<key>VPNType</key>
 			<string>VPN</string>
 			<key>VendorConfig</key>
@@ -282,10 +290,16 @@ Output:
 ```
 
 ### Extended Usage
-	$ ovpnmcgen.rb gen --trusted-ssids home,school --untrusted-ssids virusnet \
-	--host vpn.example.com --cafile path/to/ca.pem --tafile path/to/ta.key \
+	$ ovpnmcgen.rb gen --v12compat \
+	--trusted-ssids home,school \
+	--untrusted-ssids virusnet \
+	--host vpn.example.com \
+	--cafile path/to/ca.pem \
+	--tafile path/to/ta.key \
 	--url-probe http://vpn.example.com/status \
-	--p12file path/to/john-ipad.p12 --p12pass p12passphrase john ipad
+	--p12file path/to/john-ipad.p12 \
+	--p12pass p12passphrase \
+	john ipad
 
 Output similar to above:
 

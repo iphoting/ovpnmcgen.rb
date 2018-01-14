@@ -7,7 +7,7 @@ require 'ovpnmcgen/config'
 program :version, Ovpnmcgen::VERSION
 program :description, Ovpnmcgen::SUMMARY
 program :help, 'Usage', 'ovpnmcgen.rb <command> [options] <args...>'
-program :help_formatter, :compact
+program :help_formatter, Commander::HelpFormatter::Terminal
 default_command :help
 never_trace!
 global_option '-c', '--config FILE', 'Specify path to config file. [Default: .ovpnmcgen.rb.yml]'
@@ -16,8 +16,8 @@ command :generate do |c|
   c.syntax = 'ovpnmcgen.rb generate [options] <user> <device>'
   c.summary = 'Generates iOS Configuration Profiles (.mobileconfig)'
   c.description = 'Generates iOS configuration profiles (.mobileconfig) that configures OpenVPN for use with VPN-on-Demand that are not accessible through the Apple Configurator or the iPhone Configuration Utility.'
-  c.example 'Typical Usage', 'ovpnmcgen.rb gen --trusted-ssids home --host vpn.example.com --cafile path/to/ca.pem --tafile path/to/ta.key --p12file path/to/john-ipad.p12 --p12pass p12passphrase john ipad'
-  c.example 'Extended Usage', 'ovpnmcgen.rb gen --trusted-ssids home,school --untrusted-ssids virusnet --host vpn.example.com --cafile path/to/ca.pem --tafile path/to/ta.key --p12file path/to/john-ipad.p12 --p12pass p12passphrase john ipad'
+  c.example 'Typical Usage', 'ovpnmcgen.rb gen --v12compat --trusted-ssids home --host vpn.example.com --cafile path/to/ca.pem --tafile path/to/ta.key --p12file path/to/john-ipad.p12 --p12pass p12passphrase john ipad'
+  c.example 'Extended Usage', 'ovpnmcgen.rb gen --v12compat --trusted-ssids home,school --untrusted-ssids virusnet --host vpn.example.com --cafile path/to/ca.pem --tafile path/to/ta.key --p12file path/to/john-ipad.p12 --p12pass p12passphrase john ipad'
   c.example 'Using OpenSSL to convert files into PKCS#12 (.p12)', 'openssl pkcs12 -export -out path/to/john-ipad.p12 -inkey path/to/john-ipad.key -in path/to/john-ipad.crt -passout pass:p12passphrase -name john-ipad@vpn.example.com'
   c.example 'Using OpenSSL to convert from PKCS#12 (.p12) to Cert PEM file', 'openssl pkcs12 -in path/to/john-ipad.p12 -out path/to/john-ipad-cert.crt -nodes -nokeys'
   c.example 'Using OpenSSL to convert from PKCS#12 (.p12) to Key PEM file', 'openssl pkcs12 -in path/to/john-ipad.p12 -out path/to/john-ipad-key.pem -nodes -nocerts'
@@ -30,8 +30,8 @@ command :generate do |c|
   c.option '-p', '--port PORT', 'OpenVPN server port. [Default: 1194]'
   c.option '--p12file FILE', 'Path to user PKCS#12 file. (Required)'
   c.option '--p12pass PASSWORD', 'Password to unlock PKCS#12 file.'
-  c.option '--[no-]vod', 'Enable or Disable VPN-On-Demand. [Default: Enabled]'
-  c.option '--v12compat', 'Enable OpenVPN Connect 1.2.x compatibility. [Default: Disabled]'
+  c.option '--[no-]vod', 'Enable or Disable VPN-On-Demand. When Disabled, sets `vpn-on-demand: 0`, so that OpenVPN Connect can control this profile. [Default: Enabled]'
+  c.option '--v12compat', 'Enable OpenVPN Connect 1.2.x compatibility. When Enabled, use updated `VPNSubType: net.openvpn.connect.app` (changed since OpenVPN Connect 1.2.x). [Default: Disabled]'
   c.option '--security-level LEVEL', 'Security level of VPN-On-Demand Behaviour: paranoid, high, medium. [Default: high]'
   c.option '--vpn-uuid UUID', 'Override a VPN configuration payload UUID.'
   c.option '--profile-uuid UUID', 'Override a Profile UUID.'
