@@ -1,0 +1,13 @@
+---
+:checks_remove:
+- :common
+- :rails
+:checks_add:
+- :merge_conflict
+- :yaml
+:warnings_remove: []
+:warnings_add:
+- :tabs
+- :nb_space
+- :whitespace
+- :ci
