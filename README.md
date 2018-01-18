@@ -9,6 +9,16 @@ OpenVPN iOS Configuration Profile Utility
 
 Generates iOS configuration profiles (.mobileconfig) that configures OpenVPN for use with VPN-on-Demand that are not accessible through the Apple Configurator or the iPhone Configuration Utility.
 
+---
+
+**OpenVPN Connect (iOS) v1.2.x**: 
+- Breaking changes: enable the `--v12compat` switch.
+- Bug/workaround: enable the `--cert` & `--key` switches as necessary.
+
+Refer to [known issues](#known-issues) below for more details.
+
+---
+
 Although there are many possible VPN-on-Demand (VoD) triggers, this utility currently only implements `SSIDMatch`, `InterfaceTypeMatch`, and optionally `URLStringProbe`. For 'high' (default) security level, the following algorithm is executed upon network changes, in order:
 
 - If wireless SSID matches any specified with `--trusted-ssids`, tear down the VPN connection and do not reconnect on demand.
