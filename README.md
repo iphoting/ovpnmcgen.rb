@@ -9,6 +9,16 @@ OpenVPN iOS Configuration Profile Utility
 
 Generates iOS configuration profiles (.mobileconfig) that configures OpenVPN for use with VPN-on-Demand that are not accessible through the Apple Configurator or the iPhone Configuration Utility.
 
+---
+
+**OpenVPN Connect (iOS) v1.2.x**: 
+- Breaking changes: enable the `--v12compat` switch.
+- Bug/workaround: enable the `--cert` & `--key` switches as necessary.
+
+Refer to [known issues](#known-issues) below for more details.
+
+---
+
 Although there are many possible VPN-on-Demand (VoD) triggers, this utility currently only implements `SSIDMatch`, `InterfaceTypeMatch`, and optionally `URLStringProbe`. For 'high' (default) security level, the following algorithm is executed upon network changes, in order:
 
 - If wireless SSID matches any specified with `--trusted-ssids`, tear down the VPN connection and do not reconnect on demand.
@@ -47,18 +57,26 @@ Usage: ovpnmcgen.rb generate [options] <user> <device>
     -c, --config FILE    Specify path to config file. [Default: .ovpnmcgen.rb.yml]
     --cafile FILE        Path to OpenVPN CA file. (Required)
     --tafile FILE        Path to TLS-Auth Key file.
+    --cert FILE          Path to Cert file.
+    --key FILE           Path to Private Key file.
     --host HOSTNAME      Hostname of OpenVPN server. (Required)
     --proto PROTO        OpenVPN server protocol. [Default: udp]
     -p, --port PORT      OpenVPN server port. [Default: 1194]
-    --p12file FILE       Path to user PKCS#12 file. (Required)
+    --p12file FILE       Path to user PKCS#12 file.
     --p12pass PASSWORD   Password to unlock PKCS#12 file.
-    --[no-]vod           Enable or Disable VPN-On-Demand. [Default: Enabled]
+    --[no-]vod           Enable or Disable VPN-On-Demand. 
+                         When Disabled, sets `vpn-on-demand: 0`, so that OpenVPN Connect can control this profile. [Default: Enabled]
+    --v12compat          Enable OpenVPN Connect 1.2.x compatibility. 
+                         When Enabled, use updated `VPNSubType: net.openvpn.connect.app` 
+                         (changed since OpenVPN Connect 1.2.x). [Default: Disabled]
     --security-level LEVEL Security level of VPN-On-Demand Behaviour: paranoid, high, medium. [Default: high]
     --vpn-uuid UUID      Override a VPN configuration payload UUID.
     --profile-uuid UUID  Override a Profile UUID.
     --cert-uuid UUID     Override a Certificate payload UUID.
     -t, --trusted-ssids SSIDS List of comma-separated trusted SSIDs.
     -u, --untrusted-ssids SSIDS List of comma-separated untrusted SSIDs.
+    -d, --domains DOMAINS List of comma-separated domain names requiring VPN service.
+    --domain-probe-url PROBE An HTTP(S) URL to probe, using a GET request. If no HTTP response code is received from the server, a VPN connection is established in response.
     --url-probe URL      This URL must return HTTP status 200, without redirection, before the VPN service will try establishing.
     --remotes REMOTES	List of comma-separated alternate remotes: "<host> <port> <proto>".
     --ovpnconfigfile FILE Path to OpenVPN client config file.
@@ -110,13 +128,25 @@ This feature can be enabled for statistical and maintenance-protection reasons. 
 
 By enabling this option, you will need to reliably and quickly respond with HTTP status code 200 at the URL string supplied.
 
+### Domain Matching
+To require an iOS device to bring up the VPN when `example.com` is requested is not so easy, especially if it is has a publicly accessible DNS resolution. 
+
+Apple provides an `EvaluateConnection` and `ActionParameters` configuration options with the view that certain domains will have DNS resolution failures, and hence, require the VPN to be up. In most corporate cases with internal-facing hostnames, it works well. See the `--domains` option.
+
+However, if there are certain sensitive public sites (or blocked sites) that you decide that a VPN should be brought up instead, you will need to additionally specify a `RequiredURLStringProbe` that returns a non-200 response. See the `--domain-probe-url` option.
+
 ## Examples
 
 ### Typical Usage
-	$ ovpnmcgen.rb gen --trusted-ssids home --host vpn.example.com \
-	--cafile path/to/ca.pem --tafile path/to/ta.key \
+	$ ovpnmcgen.rb gen --v12compat \
+	--trusted-ssids home \
+	--host vpn.example.com \
+	--cafile path/to/ca.pem \
+	--tafile path/to/ta.key \
 	--url-probe http://vpn.example.com/status \
-	--p12file path/to/john-ipad.p12 --p12pass p12passphrase john ipad
+	--p12file path/to/john-ipad.p12 \
+	--p12pass p12passphrase \
+	john ipad
 
 Output:
 
@@ -191,7 +221,7 @@ Output:
 				<string>DEFAULT</string>
 			</dict>
 			<key>VPNSubType</key>
-			<string>net.openvpn.OpenVPN-Connect.vpnplugin</string>
+			<string>net.openvpn.connect.app</string>
 			<key>VPNType</key>
 			<string>VPN</string>
 			<key>VendorConfig</key>
@@ -270,10 +300,16 @@ Output:
 ```
 
 ### Extended Usage
-	$ ovpnmcgen.rb gen --trusted-ssids home,school --untrusted-ssids virusnet \
-	--host vpn.example.com --cafile path/to/ca.pem --tafile path/to/ta.key \
+	$ ovpnmcgen.rb gen --v12compat \
+	--trusted-ssids home,school \
+	--untrusted-ssids virusnet \
+	--host vpn.example.com \
+	--cafile path/to/ca.pem \
+	--tafile path/to/ta.key \
 	--url-probe http://vpn.example.com/status \
-	--p12file path/to/john-ipad.p12 --p12pass p12passphrase john ipad
+	--p12file path/to/john-ipad.p12 \
+	--p12pass p12passphrase \
+	john ipad
 
 Output similar to above:
 
@@ -349,7 +385,25 @@ Output similar to above:
 	-inkey path/to/john-ipad.key -in path/to/john-ipad.crt \
 	-passout pass:p12passphrase -name john-ipad@vpn.example.com
 
+### Using OpenSSL to convert from PKCS#12 (.p12) to Cert PEM file
+	openssl pkcs12 -in path/to/john-ipad.p12 -out path/to/john-ipad-cert.crt \
+	-nodes -nokeys
+
+### Using OpenSSL to convert from PKCS#12 (.p12) to Key PEM file
+	openssl pkcs12 -in path/to/john-ipad.p12 -out path/to/john-ipad-key.pem \
+	-nodes -nocerts
+
 ## Known Issues
+
+- OpenVPN Connect v1.2.5 breaking changes
+
+	*Diagnosis*: Certificates no longer found or VoD mobileconfig broken after OpenVPN Connect upgrade to v1.2.5.
+
+	The VPN switch in the Settings.app jumps rapidly from On to Off, status switches from Connecting... to Disconnected immediately. No logs produced within the OpernVPN Connect app log viewer.
+
+	This is caused by 1) a breaking change, where the `VPNSubType` has changed, and 2) a bug where the OpenVPN Connect is missing a keychain access entitlement from Apple.
+
+	*Solution + Workaround*: Enable the `--v12compat` switch to resolve (1), and use `--cert` and `--key` switches to workaround (2).
 
 - "Not connected to Internet" error/behaviour when VPN should be established.
 

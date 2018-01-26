@@ -7,4 +7,8 @@ end
 desc "Run cucumber tests"
 task :test => :cucumber
 
+namespace :pre_commit do
+	task :ci => [:test]
+end
+
 task :default => :test

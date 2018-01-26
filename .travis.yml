@@ -1,14 +1,17 @@
 language: ruby
+#cache: bundler
 
 before_install:
+  # https://github.com/travis-ci/travis-ci/issues/8978
+  - gem update --system
   - gem update bundler
   - bundle version
 
 rvm:
-  - "1.9.3"
-  - "2.0.0"
-  - "2.1"
-  - "2.2"
+  - 2.2
+  - 2.3
+  - 2.4
+  - 2.5
   - ruby-head
   - jruby-19mode
 
@@ -26,4 +29,5 @@ deploy:
   on:
     tags: true
     repo: "iphoting/ovpnmcgen.rb"
-    ruby: 2.0.0
+    ruby: 2.4.0
+    branch: master
