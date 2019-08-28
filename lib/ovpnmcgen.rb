@@ -206,9 +206,9 @@ module Ovpnmcgen
     #encPlistPayloadContent = cmsEncrypt([vpn, cert].to_plist).der_format
 
     plist = {
-      'PayloadDescription' => "OpenVPN Configuration Payload for #{user}-#{device}@#{host}",
+      'PayloadDescription' => plistDescription,
       'PayloadDisplayName' => "#{host} OpenVPN #{user}@#{device}",
-      'PayloadIdentifier' => "#{identifier}.#{user}-#{device}",
+      'PayloadIdentifier' => (inputs[:profile_uuid]) ? "com.apple.vpn.managed.#{plistUUID}" : "#{identifier}.#{user}-#{device}",
       'PayloadOrganization' => domain,
       'PayloadRemovalDisallowed' => false,
       'PayloadType' => 'Configuration',

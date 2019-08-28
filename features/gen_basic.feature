@@ -463,3 +463,11 @@ Feature: Basic Generate Functionality
 			\s*</dict>
 			\s*</array>
 			"""
+
+	Scenario: The profile UUID flag is set.
+		When I run `ovpnmcgen.rb g --host aruba.cucumber.org --cafile ca.crt --p12file p12file.p12 --profile-uuid A43E7B13-4F02-4121-9B70-81C734E495C1 cucumber aruba`
+		Then the output should match:
+			"""
+			<key>PayloadIdentifier</key>
+			\s*<string>com.apple.vpn.managed.A43E7B13-4F02-4121-9B70-81C734E495C1</string>
+			"""
