@@ -201,6 +201,10 @@ module Ovpnmcgen
       vpn['VPN']['AuthenticationMethod'] = 'Password'
       vpn['VPN'].delete('PayloadCertificateUUID')
     end
+    if inputs[:idle_timer]
+      vpn['VPN']['DisconnectOnIdle'] = 1
+      vpn['VPN']['DisconnectOnIdleTimer'] = inputs[:idle_timer]
+    end
 
     plistPayloadContent = [vpn]
     plistPayloadContent << cert if p12file

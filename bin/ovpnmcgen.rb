@@ -46,6 +46,7 @@ command :generate do |c|
   c.option '--domain-probe-url PROBE', String, 'An HTTP(S) URL to probe, using a GET request. If no HTTP response code is received from the server, a VPN connection is established in response.'
   c.option '--url-probe URL', 'This URL must return HTTP status 200, without redirection, before the VPN service will try establishing.'
   c.option '--remotes REMOTES', Array, 'List of comma-separated alternate remotes: "<host> <port> <proto>".'
+  c.option '--idle-timer TIME', Integer, 'Disconnect from VPN when idle for a certain period of time (in seconds) which is useful for VPN-On-Demand scenarios. Requires disabling "Reconnect On Wakeup" on OpenVPN.app.'
   c.option '--ovpnconfigfile FILE', 'Path to OpenVPN client config file.'
   c.option '-o', '--output FILE', 'Output to file. [Default: stdout]'
   c.action do |args, options|
@@ -113,6 +114,7 @@ command :generate do |c|
     inputs[:domains] = options.domains || config.domains if options.domains or config.domains
     inputs[:domain_probe_url] = options.domain_probe_url || config.domain_probe_url if options.domain_probe_url or config.domain_probe_url
     inputs[:v12compat] = options.v12compat || config.v12compat if options.v12compat or config.v12compat
+    inputs[:idle_timer] = options.idle_timer || config.idle_timer if options.idle_timer or config.idle_timer
 
     unless options.output
       puts Ovpnmcgen.generate(inputs)

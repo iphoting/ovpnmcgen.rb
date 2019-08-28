@@ -479,3 +479,13 @@ Feature: Basic Generate Functionality
 			<key>UserDefinedName</key>
 			\s*<string>foobar</string>
 			"""
+
+	Scenario: The idle timer flag is set.
+		When I run `ovpnmcgen.rb g --host aruba.cucumber.org --cafile ca.crt --p12file p12file.p12 --idle-timer 10 cucumber aruba`
+		Then the output should match:
+			"""
+			<key>DisconnectOnIdle</key>
+			\s*<integer>1</integer>
+			\s*<key>DisconnectOnIdleTimer</key>
+			\s*<integer>10</integer>
+			"""
