@@ -16,6 +16,11 @@ Feature: Basic Generate Functionality
 			p12file that should appear
 			In base64 encoding as <data/>
 			"""
+		And a file named "cucumber-aruba.p12" with:
+			"""
+			p12file with filename that matches
+			#{user}-#{device} pattern
+			"""
 		And a file named "cert.crt" with:
 			"""
 			Contents of cert file
@@ -108,6 +113,18 @@ Feature: Basic Generate Functionality
 			<key>OnDemandEnabled</key>
 			\s*<integer>1</integer>
 			"""
+
+	Scenario: Correct arguments with all required flags, host, cafile, and p12file (no cert and key) in #{user}-#{device} pattern.
+		When I run `ovpnmcgen.rb g --host aruba.cucumber.org --cafile ca.crt --p12file cucumber-aruba.p12`
+		Then the output should match:
+		"""
+		<key>PayloadDescription</key>
+		\s*<string>OpenVPN Configuration Payload for cucumber-aruba@aruba.cucumber.org</string>
+		\s*<key>PayloadDisplayName</key>
+		\s*<string>aruba.cucumber.org OpenVPN cucumber@aruba</string>
+		\s*<key>PayloadIdentifier</key>
+		\s*<string>org.cucumber.aruba.cucumber-aruba</string>
+		"""
 
 	@OCv1.2 @v0.6.0
 	Scenario: Correct arguments with all required flags, host, cafile, cert, and key (no p12file).

@@ -50,8 +50,6 @@ command :generate do |c|
   c.option '--ovpnconfigfile FILE', 'Path to OpenVPN client config file.'
   c.option '-o', '--output FILE', 'Output to file. [Default: stdout]'
   c.action do |args, options|
-    raise ArgumentError.new "Invalid arguments. Run '#{File.basename(__FILE__)} help generate' for guidance" if args.nil? or args.length < 2
-
     # Set up configuration environment.
     if $config
       Ovpnmcgen.configure($config)
@@ -59,6 +57,16 @@ command :generate do |c|
       Ovpnmcgen.configure
     end
     config = Ovpnmcgen.config
+
+    user, device = args
+    if args.empty? and (options.p12file or config.p12file)
+      filename = File.basename((options.p12file or config.p12file), '.p12')
+      user, device = filename.split('-') if filename
+    end
+
+    unless user and device
+      raise ArgumentError.new "Invalid arguments. Run '#{File.basename(__FILE__)} help generate' for guidance"
+    end
 
     raise ArgumentError.new "Host is required" unless options.host or config.host
     raise ArgumentError.new "cafile is required" unless options.cafile or config.cafile
@@ -83,8 +91,6 @@ command :generate do |c|
       :proto => (config.proto)? config.proto : 'udp',
       :port => (config.port)? config.port : 1194,
       :security_level => (config.security_level)? config.security_level : 'high'
-
-    user, device = args
 
     inputs = {
       :user => user,
