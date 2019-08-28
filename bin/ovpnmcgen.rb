@@ -37,6 +37,7 @@ command :generate do |c|
   c.option '--v12compat', 'Enable OpenVPN Connect 1.2.x compatibility. When Enabled, use updated `VPNSubType: net.openvpn.connect.app` (changed since OpenVPN Connect 1.2.x). [Default: Disabled]'
   c.option '--security-level LEVEL', 'Security level of VPN-On-Demand Behaviour: paranoid, high, medium. [Default: high]'
   c.option '--vpn-uuid UUID', 'Override a VPN configuration payload UUID.'
+  c.option '--vpn-name NAME', 'Override a VPN configuration payload name displayed under Settings.app > General > VPN.'
   c.option '--profile-uuid UUID', 'Override a Profile UUID.'
   c.option '--cert-uuid UUID', 'Override a Certificate payload UUID.'
   c.option '-t', '--trusted-ssids SSIDS', Array, 'List of comma-separated trusted SSIDs.'
@@ -97,6 +98,7 @@ command :generate do |c|
       :untrusted_ssids => options.untrusted_ssids || config.untrusted_ssids,
       :profile_uuid => options.profile_uuid || config.profile_uuid,
       :vpn_uuid => options.vpn_uuid || config.vpn_uuid,
+      :vpn_name => options.vpn_name || config.vpn_name,
       :cert_uuid => options.cert_uuid || config.cert_uuid,
       :security_level => options.security_level
     }

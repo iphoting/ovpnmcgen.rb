@@ -471,3 +471,11 @@ Feature: Basic Generate Functionality
 			<key>PayloadIdentifier</key>
 			\s*<string>com.apple.vpn.managed.A43E7B13-4F02-4121-9B70-81C734E495C1</string>
 			"""
+
+	Scenario: The VPN profile name flag is set.
+		When I run `ovpnmcgen.rb g --host aruba.cucumber.org --cafile ca.crt --p12file p12file.p12 --vpn-name foobar cucumber aruba`
+		Then the output should match:
+			"""
+			<key>UserDefinedName</key>
+			\s*<string>foobar</string>
+			"""

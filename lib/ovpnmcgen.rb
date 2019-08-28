@@ -19,6 +19,7 @@ module Ovpnmcgen
     untrusted_ssids = inputs[:untrusted_ssids] || false
     remotes = inputs[:remotes] || false
     vodDomains = inputs[:domains] || false
+    vpnName = inputs[:vpn_name] || "#{host}/VoD"
     plistDescription = "OpenVPN Configuration Payload for #{user}-#{device}@#{host}"
 
     # Ensure [un]trusted_ssids are Arrays.
@@ -183,7 +184,7 @@ module Ovpnmcgen
       'PayloadType' => 'com.apple.vpn.managed',
       'PayloadUUID' => vpnUUID,
       'PayloadVersion' => 1,
-      'UserDefinedName' => "#{host}/VoD",
+      'UserDefinedName' => vpnName,
       'VPN' => {
         'AuthenticationMethod' => 'Certificate',
         'OnDemandEnabled' => (enableVOD)? 1 : 0,
