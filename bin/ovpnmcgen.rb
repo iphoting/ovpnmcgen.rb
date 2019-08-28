@@ -25,6 +25,7 @@ command :generate do |c|
   c.example 'Using OpenSSL to convert from PKCS#12 (.p12) to Key PEM file', 'openssl pkcs12 -in path/to/john-ipad.p12 -out path/to/john-ipad-key.pem -nodes -nocerts'
   c.option '--cafile FILE', 'Path to OpenVPN CA file. (Required)'
   c.option '--tafile FILE', 'Path to TLS-Auth Key file.'
+  c.option '--tlscryptfile FILE', 'Path to TLS-Crypt Key file.'
   c.option '--cert FILE', 'Path to Cert file.'
   c.option '--key FILE', 'Path to Private Key file.'
   c.option '--host HOSTNAME', 'Hostname of OpenVPN server. (Required)'
@@ -65,6 +66,10 @@ command :generate do |c|
       raise ArgumentError.new "PKCS#12 or cert & key file required"
     end
 
+    if (config.tafile or options.tafile) and (config.tlscryptfile or options.tlscryptfile)
+      raise ArgumentError.new "tafile and tlscryptfile cannot be both set"
+    end
+
     options.default :vod => case
       when config.vod == true || config.no_vod == false
         true
@@ -98,6 +103,7 @@ command :generate do |c|
     inputs[:ovpnconfigfile] = options.ovpnconfigfile || config.ovpnconfigfile if options.ovpnconfigfile or config.ovpnconfigfile
     inputs[:p12file] = options.p12file || config.p12file if options.p12file or config.p12file
     inputs[:tafile] = options.tafile || config.tafile if options.tafile or config.tafile
+    inputs[:tlscryptfile] = options.tlscryptfile || config.tlscryptfile if options.tlscryptfile or config.tlscryptfile
     inputs[:cert] = options.cert || config.cert if options.cert or config.cert
     inputs[:key] = options.key || config.key if options.key or config.key
     inputs[:url_probe] = options.url_probe || config.url_probe if options.url_probe or config.url_probe

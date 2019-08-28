@@ -34,7 +34,7 @@ module Ovpnmcgen
         case key
         when 'fragment', 'mssfix', 'secret', 'socks-proxy', 'persist-key', 'persist-tun', 'resolv-retry', 'nobind', 'verb', 'user', 'group', 'pull', 'mute'
           true
-        when 'remote', 'ca', 'pkcs12', 'tls-auth', 'cert', 'key', 'proto' # specified with switches.
+        when 'remote', 'ca', 'pkcs12', 'tls-auth', 'tls-crypt', 'cert', 'key', 'proto' # specified with switches.
           true
         else
           false
