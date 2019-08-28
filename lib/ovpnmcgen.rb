@@ -19,6 +19,7 @@ module Ovpnmcgen
     untrusted_ssids = inputs[:untrusted_ssids] || false
     remotes = inputs[:remotes] || false
     vodDomains = inputs[:domains] || false
+    vpnName = inputs[:vpn_name] || "#{host}/VoD"
 
     # Ensure [un]trusted_ssids are Arrays.
     trusted_ssids = Array(trusted_ssids) if trusted_ssids
@@ -173,7 +174,7 @@ module Ovpnmcgen
       'PayloadType' => 'com.apple.vpn.managed',
       'PayloadUUID' => vpnUUID,
       'PayloadVersion' => 1,
-      'UserDefinedName' => "#{host}/VoD",
+      'UserDefinedName' => vpnName,
       'VPN' => {
         'AuthenticationMethod' => 'Certificate',
         'OnDemandEnabled' => (enableVOD)? 1 : 0,

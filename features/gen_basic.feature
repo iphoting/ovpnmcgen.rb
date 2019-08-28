@@ -444,3 +444,11 @@ Feature: Basic Generate Functionality
 			\s*</dict>
 			\s*</array>
 			"""
+
+	Scenario: The VPN profile name flag is set.
+		When I run `ovpnmcgen.rb g --host aruba.cucumber.org --cafile ca.crt --p12file p12file.p12 --vpn-name foobar cucumber aruba`
+		Then the output should match:
+			"""
+			<key>UserDefinedName</key>
+			\s*<string>foobar</string>
+			"""
