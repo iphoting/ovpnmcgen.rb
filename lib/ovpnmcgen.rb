@@ -34,6 +34,13 @@ module Ovpnmcgen
     end
 
     begin
+      tls_crypt = File.readlines(inputs[:tlscryptfile]).map { |x| x.chomp }.join('\n')
+    rescue Errno::ENOENT
+      puts "TLS crypt file not found: #{inputs[:tlscryptfile]}!"
+      exit
+    end if inputs[:tlscryptfile]
+
+    begin
       tls_auth = File.readlines(inputs[:tafile]).map { |x| x.chomp }.join('\n')
     rescue Errno::ENOENT
       puts "TLS file not found: #{inputs[:tafile]}!"
@@ -82,6 +89,7 @@ module Ovpnmcgen
     ovpnconfighash['ca'] = ca_cert
     ovpnconfighash['tls-auth'] = tls_auth if inputs[:tafile]
     ovpnconfighash['key-direction'] = '1' if inputs[:tafile]
+    ovpnconfighash['tls-crypt'] = tls_crypt if inputs[:tlscryptfile]
     ovpnconfighash['cert'] = cert_file if inputs[:cert]
     ovpnconfighash['key'] = key_file if inputs[:key]
     ovpnconfighash['vpn-on-demand'] = '0' unless enableVOD

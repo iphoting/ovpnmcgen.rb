@@ -184,6 +184,25 @@ Feature: Basic Generate Functionality
 			\s*<string>Contents of TLS-Auth Key file\\nWith newlines\\nAnd more newlines\\nThat should appear as one line</string>
 			"""
 
+	Scenario: The tlscrypt flag is set.
+		Given a file named "tlscrypt.key" with:
+			"""
+			Contents of TLS-Crypt Key file
+			With newlines
+			And more newlines
+			That should appear as one line
+			"""
+		When I run `ovpnmcgen.rb g --host aruba.cucumber.org --cafile ca.crt --p12file p12file.p12 --tlscryptfile tlscrypt.key cucumber aruba`
+		Then the output should match:
+			"""
+			<key>tls-crypt</key>
+			\s*<string>Contents of TLS-Crypt Key file\\nWith newlines\\nAnd more newlines\\nThat should appear as one line</string>
+			"""
+
+	Scenario: Both tafile and tlscryptfile flags are set.
+		When I run `ovpnmcgen.rb g --host aruba.cucumber.org --cafile ca.crt --p12file p12file.p12 --tafile ta.key --tlscryptfile tlscrypt.key cucumber aruba`
+		Then the output should contain "error: tafile and tlscryptfile cannot be both set"
+
 	Scenario: The proto and port flags are set.
 		When I run `ovpnmcgen.rb g --host aruba.cucumber.org --cafile ca.crt --p12file p12file.p12 --proto tcp --port 1234 cucumber aruba`
 		Then the output should match:
