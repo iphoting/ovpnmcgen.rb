@@ -10,8 +10,10 @@ program :help, 'Usage', 'ovpnmcgen.rb <command> [options] <args...>'
 program :help_formatter, Commander::HelpFormatter::Terminal
 default_command :help
 never_trace!
-global_option '-c', '--config FILE', 'Specify path to config file. [Default: .ovpnmcgen.rb.yml]'
- 
+global_option('-c', '--config FILE', 'Specify path to config file. [Default: .ovpnmcgen.rb.yml]') do |config|
+  $config = config
+end
+
 command :generate do |c|
   c.syntax = 'ovpnmcgen.rb generate [options] <user> <device>'
   c.summary = 'Generates iOS Configuration Profiles (.mobileconfig)'
@@ -48,8 +50,8 @@ command :generate do |c|
     raise ArgumentError.new "Invalid arguments. Run '#{File.basename(__FILE__)} help generate' for guidance" if args.nil? or args.length < 2
 
     # Set up configuration environment.
-    if options.config
-      Ovpnmcgen.configure(options.config)
+    if $config
+      Ovpnmcgen.configure($config)
     else
       Ovpnmcgen.configure
     end
