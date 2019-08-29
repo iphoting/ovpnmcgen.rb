@@ -176,7 +176,7 @@ module Ovpnmcgen
     vpn = {
       'PayloadDescription' => "Configures VPN settings, including authentication.",
       'PayloadDisplayName' => "VPN (#{host}/VoD)",
-      'PayloadIdentifier' => "#{identifier}.#{user}-#{device}.vpnconfig",
+      'PayloadIdentifier' => (inputs[:vpn_uuid]) ? "com.apple.vpn.managed.#{certUUID}" : "#{identifier}.#{user}-#{device}.vpnconfig",
       'PayloadOrganization' => domain,
       'PayloadType' => 'com.apple.vpn.managed',
       'PayloadUUID' => vpnUUID,
