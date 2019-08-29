@@ -166,7 +166,7 @@ module Ovpnmcgen
       'PayloadContent' => StringData.new(p12file),
       'PayloadDescription' => 'Provides device authentication (certificate or identity).',
       'PayloadDisplayName' => "#{user}-#{device}.p12",
-      'PayloadIdentifier' => "#{identifier}.#{user}-#{device}.credential",
+      'PayloadIdentifier' => (inputs[:cert_uuid]) ? "com.apple.vpn.managed.#{certUUID}" : "#{identifier}.#{user}-#{device}.credential",
       'PayloadOrganization' => domain,
       'PayloadType' => 'com.apple.security.pkcs12',
       'PayloadUUID' => certUUID,
