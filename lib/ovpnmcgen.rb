@@ -19,6 +19,7 @@ module Ovpnmcgen
     untrusted_ssids = inputs[:untrusted_ssids] || false
     remotes = inputs[:remotes] || false
     vodDomains = inputs[:domains] || false
+    plistDescription = "OpenVPN Configuration Payload for #{user}-#{device}@#{host}"
 
     # Ensure [un]trusted_ssids are Arrays.
     trusted_ssids = Array(trusted_ssids) if trusted_ssids
@@ -70,6 +71,7 @@ module Ovpnmcgen
 
     unless inputs[:ovpnconfigfile].nil?
       ovpnconfighash = Ovpnmcgen.getOVPNVendorConfigHash(inputs[:ovpnconfigfile])
+      plistDescription = "#{plistDescription}. Includes custom OpenVPN directives #{ovpnconfighash.to_s.gsub('"', '').gsub('=>', '=')}."
     else # Bare minimum configuration
       ovpnconfighash = {
         'client' => 'NOARGS',
