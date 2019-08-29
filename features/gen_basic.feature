@@ -320,6 +320,25 @@ Feature: Basic Generate Functionality
 			\s*</array>
 			"""
 
+	Scenario: The trusted ssids flag is set and trusted ssids probe URL is set.
+		When I run `ovpnmcgen.rb g --host aruba.cucumber.org --cafile ca.crt --p12file p12file.p12 --trusted-ssids trusted1 --trusted-ssids-probe-url "https://example.com/200.html" cucumber aruba`
+		Then the output should match:
+			"""
+			<string>Disconnect</string>
+			\s*<key>InterfaceTypeMatch</key>
+			\s*<string>WiFi</string>
+			\s*<key>SSIDMatch</key>
+			\s*<array>
+			\s*<string>trusted1</string>
+			\s*</array>
+			\s*<key>URLStringProbe</key>
+			\s*<string>https:\/\/example\.com\/200\.html</string>
+			"""
+
+	Scenario: The trusted ssids probe URL is set without trusted ssids flag being set.
+		When I run `ovpnmcgen.rb g --host aruba.cucumber.org --cafile ca.crt --p12file p12file.p12 --trusted-ssids-probe-url "https://example.com/200.html" cucumber aruba`
+		Then the output should contain "error: cannot set --trusted-ssids-probe-url without --trusted-ssids"
+
 	Scenario: The security-level flag is set to paranoid.
 		When I run `ovpnmcgen.rb g --host aruba.cucumber.org --cafile ca.crt --p12file p12file.p12 --security-level paranoid cucumber aruba`
 		Then the output should match:

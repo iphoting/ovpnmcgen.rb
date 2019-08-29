@@ -145,7 +145,7 @@ module Ovpnmcgen
       'Action' => 'Ignore'
     }
 
-    # Insert URLStringProbe conditions when enabled with --url-probe
+    # Insert URLStringProbe conditions when enabled with --url-probe.
     vodTrusted['URLStringProbe'] =
       vodUntrusted['URLStringProbe'] =
       vodWifiOnly['URLStringProbe'] =
@@ -153,6 +153,9 @@ module Ovpnmcgen
       vodCellularOnly['URLStringProbe'] =
       vodDefault['URLStringProbe'] =
       inputs[:url_probe] if inputs[:url_probe]
+
+    # Insert trusted SSIDs-specific URLStringProbe condition when enabled with --trusted-ssids-url-probe.
+    vodTrusted['URLStringProbe'] = inputs[:trusted_ssids_probe_url] if inputs[:trusted_ssids_probe_url]
 
     vpnOnDemandRules << vodTrusted if trusted_ssids
     vpnOnDemandRules << vodUntrusted if untrusted_ssids

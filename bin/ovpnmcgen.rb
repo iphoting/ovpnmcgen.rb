@@ -44,6 +44,7 @@ command :generate do |c|
   c.option '-u', '--untrusted-ssids SSIDS', Array, 'List of comma-separated untrusted SSIDs.'
   c.option '-d', '--domains DOMAINS', Array, 'List of comma-separated domain names requiring VPN service.'
   c.option '--domain-probe-url PROBE', String, 'An HTTP(S) URL to probe, using a GET request. If no HTTP response code is received from the server, a VPN connection is established in response.'
+  c.option '--trusted-ssids-probe-url PROBE', String, 'An HTTP(S) URL to probe, using a GET request. If no HTTP response code is received from the server, a VPN connection may be established in response.'
   c.option '--url-probe URL', 'This URL must return HTTP status 200, without redirection, before the VPN service will try establishing.'
   c.option '--remotes REMOTES', Array, 'List of comma-separated alternate remotes: "<host> <port> <proto>".'
   c.option '--idle-timer TIME', Integer, 'Disconnect from VPN when idle for a certain period of time (in seconds) which is useful for VPN-On-Demand scenarios. Requires disabling "Reconnect On Wakeup" on OpenVPN.app.'
@@ -76,6 +77,10 @@ command :generate do |c|
       raise ArgumentError.new "PKCS#12 or cert & key file required"
     end
 
+    if (options.trusted_ssids_probe_url or config.trusted_ssids_probe_url) and not (options.trusted_ssids or config.trusted_ssids)
+      raise ArgumentError.new "cannot set --trusted-ssids-probe-url without --trusted-ssids"
+    end
+
     if (config.tafile or options.tafile) and (config.tlscryptfile or options.tlscryptfile)
       raise ArgumentError.new "tafile and tlscryptfile cannot be both set"
     end
@@ -102,6 +107,7 @@ command :generate do |c|
       :port => options.port,
       :enableVOD => options.vod,
       :trusted_ssids => options.trusted_ssids || config.trusted_ssids,
+      :trusted_ssids_probe_url => options.trusted_ssids_probe_url || config.trusted_ssids_probe_url,
       :untrusted_ssids => options.untrusted_ssids || config.untrusted_ssids,
       :profile_uuid => options.profile_uuid || config.profile_uuid,
       :vpn_uuid => options.vpn_uuid || config.vpn_uuid,
