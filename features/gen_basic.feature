@@ -378,7 +378,7 @@ Feature: Basic Generate Functionality
 		And the output should match:
 			"""
 			<key>Action</key>
-			\s*<string>Disconnect</string>
+			\s*<string>Ignore</string>
 			\s*<key>InterfaceTypeMatch</key>
 			\s*<string>Cellular</string>
 			"""

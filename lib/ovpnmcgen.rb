@@ -133,14 +133,14 @@ module Ovpnmcgen
     vodCellularOnly = { # Trust Cellular
       'InterfaceTypeMatch' => 'Cellular',
       'Action' => case inputs[:security_level]
-          when 'paranoid'
-            'Connect'
-          when 'high'
-            'Ignore'
-          else # medium
-            'Disconnect'
-          end
+        when 'paranoid'
+          'Connect'
+        else # high, medium
+          'Ignore'
+        end
     }
+
+    # Default catch-all to prevent circular race.
     vodDefault = { # Default catch-all
       'Action' => 'Ignore'
     }
