@@ -21,11 +21,11 @@ Gem::Specification.new do |spec|
   spec.bindir = 'bin'
   spec.required_ruby_version = '>= 1.9.3'
 
-  spec.add_development_dependency "bundler", "~> 1.5"
+  spec.add_development_dependency "bundler", "~> 2.0"
   spec.add_development_dependency "rake"
   spec.add_development_dependency "aruba", "~> 0.5", ">= 0.5.4"
   spec.add_development_dependency "pre-commit"
-  spec.add_runtime_dependency     "plist", "~> 3.1", ">= 3.1.0"
-  spec.add_runtime_dependency     "commander", "~> 4.1", ">= 4.1.6"
+  spec.add_runtime_dependency     "plist", "~> 3.5", ">= 3.5.0"
+  spec.add_runtime_dependency     "commander", "~> 4.4", ">= 4.4.7"
   spec.add_runtime_dependency     "app_configuration", "~> 0.0", ">= 0.0.2"
 end
