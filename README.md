@@ -2,10 +2,9 @@
 
 OpenVPN iOS Configuration Profile Utility
 
-[![Stories in Ready](https://badge.waffle.io/iphoting/ovpnmcgen.rb.png?label=ready&title=Ready)](http://waffle.io/iphoting/ovpnmcgen.rb)
 [![GitHub version](https://badge.fury.io/gh/iphoting%2Fovpnmcgen.rb.svg)](http://badge.fury.io/gh/iphoting%2Fovpnmcgen.rb)
 [![Gem Version](https://badge.fury.io/rb/ovpnmcgen.rb.svg)](http://badge.fury.io/rb/ovpnmcgen.rb)
-[![Build Status](https://travis-ci.org/iphoting/ovpnmcgen.rb.svg?branch=master)](https://travis-ci.org/iphoting/ovpnmcgen.rb)
+[![Build Status](https://travis-ci.org/iphoting/ovpnmcgen.rb.svg?branch=develop)](https://travis-ci.org/iphoting/ovpnmcgen.rb)
 
 Generates iOS configuration profiles (.mobileconfig) that configures OpenVPN for use with VPN-on-Demand that are not accessible through the Apple Configurator or the iPhone Configuration Utility.
 
@@ -57,6 +56,7 @@ Usage: ovpnmcgen.rb generate [options] <user> <device>
     -c, --config FILE    Specify path to config file. [Default: .ovpnmcgen.rb.yml]
     --cafile FILE        Path to OpenVPN CA file. (Required)
     --tafile FILE        Path to TLS-Auth Key file.
+    --tlscryptfile FILE	 Path to TLS-Crypt Key file.
     --cert FILE          Path to Cert file.
     --key FILE           Path to Private Key file.
     --host HOSTNAME      Hostname of OpenVPN server. (Required)
@@ -71,14 +71,18 @@ Usage: ovpnmcgen.rb generate [options] <user> <device>
                          (changed since OpenVPN Connect 1.2.x). [Default: Disabled]
     --security-level LEVEL Security level of VPN-On-Demand Behaviour: paranoid, high, medium. [Default: high]
     --vpn-uuid UUID      Override a VPN configuration payload UUID.
+    --vpn-name NAME	     Override a VPN configuration payload name displayed under
+                         Settings.app > General > VPN.
     --profile-uuid UUID  Override a Profile UUID.
     --cert-uuid UUID     Override a Certificate payload UUID.
     -t, --trusted-ssids SSIDS List of comma-separated trusted SSIDs.
     -u, --untrusted-ssids SSIDS List of comma-separated untrusted SSIDs.
     -d, --domains DOMAINS List of comma-separated domain names requiring VPN service.
     --domain-probe-url PROBE An HTTP(S) URL to probe, using a GET request. If no HTTP response code is received from the server, a VPN connection is established in response.
+    --trusted-ssids-probe-url PROBE An HTTP(S) URL to probe, using a GET request. If no HTTP response code is received from the server, a VPN connection is established in response.
     --url-probe URL      This URL must return HTTP status 200, without redirection, before the VPN service will try establishing.
-    --remotes REMOTES	List of comma-separated alternate remotes: "<host> <port> <proto>".
+    --remotes REMOTES	 List of comma-separated alternate remotes: "<host> <port> <proto>".
+    --idle-timer TIME    Disconnect from VPN when idle for a certain period of time (in seconds) scenarios. Requires disabling "Reconnect On Wakeup" on OpenVPN.app.
     --ovpnconfigfile FILE Path to OpenVPN client config file.
     -o, --output FILE    Output to file. [Default: stdout]
 ```
