@@ -16,6 +16,11 @@ Feature: Basic Generate Functionality
 			p12file that should appear
 			In base64 encoding as <data/>
 			"""
+		And a file named "cucumber-aruba.p12" with:
+			"""
+			p12file with filename that matches
+			#{user}-#{device} pattern
+			"""
 		And a file named "cert.crt" with:
 			"""
 			Contents of cert file
@@ -109,6 +114,18 @@ Feature: Basic Generate Functionality
 			\s*<integer>1</integer>
 			"""
 
+	Scenario: Correct arguments with all required flags, host, cafile, and p12file (no cert and key) in #{user}-#{device} pattern.
+		When I run `ovpnmcgen.rb g --host aruba.cucumber.org --cafile ca.crt --p12file cucumber-aruba.p12`
+		Then the output should match:
+		"""
+		<key>PayloadDescription</key>
+		\s*<string>OpenVPN Configuration Payload for cucumber-aruba@aruba.cucumber.org</string>
+		\s*<key>PayloadDisplayName</key>
+		\s*<string>aruba.cucumber.org OpenVPN cucumber@aruba</string>
+		\s*<key>PayloadIdentifier</key>
+		\s*<string>org.cucumber.aruba.cucumber-aruba</string>
+		"""
+
 	@OCv1.2 @v0.6.0
 	Scenario: Correct arguments with all required flags, host, cafile, cert, and key (no p12file).
 		When I run `ovpnmcgen.rb g --host aruba.cucumber.org --cafile ca.crt --cert cert.crt --key key.pem cucumber aruba`
@@ -183,6 +200,25 @@ Feature: Basic Generate Functionality
 			<key>tls-auth</key>
 			\s*<string>Contents of TLS-Auth Key file\\nWith newlines\\nAnd more newlines\\nThat should appear as one line</string>
 			"""
+
+	Scenario: The tlscrypt flag is set.
+		Given a file named "tlscrypt.key" with:
+			"""
+			Contents of TLS-Crypt Key file
+			With newlines
+			And more newlines
+			That should appear as one line
+			"""
+		When I run `ovpnmcgen.rb g --host aruba.cucumber.org --cafile ca.crt --p12file p12file.p12 --tlscryptfile tlscrypt.key cucumber aruba`
+		Then the output should match:
+			"""
+			<key>tls-crypt</key>
+			\s*<string>Contents of TLS-Crypt Key file\\nWith newlines\\nAnd more newlines\\nThat should appear as one line</string>
+			"""
+
+	Scenario: Both tafile and tlscryptfile flags are set.
+		When I run `ovpnmcgen.rb g --host aruba.cucumber.org --cafile ca.crt --p12file p12file.p12 --tafile ta.key --tlscryptfile tlscrypt.key cucumber aruba`
+		Then the output should contain "error: tafile and tlscryptfile cannot be both set"
 
 	Scenario: The proto and port flags are set.
 		When I run `ovpnmcgen.rb g --host aruba.cucumber.org --cafile ca.crt --p12file p12file.p12 --proto tcp --port 1234 cucumber aruba`
@@ -283,6 +319,25 @@ Feature: Basic Generate Functionality
 			\s*<string>evil4</string>
 			\s*</array>
 			"""
+
+	Scenario: The trusted ssids flag is set and trusted ssids probe URL is set.
+		When I run `ovpnmcgen.rb g --host aruba.cucumber.org --cafile ca.crt --p12file p12file.p12 --trusted-ssids trusted1 --trusted-ssids-probe-url "https://example.com/200.html" cucumber aruba`
+		Then the output should match:
+			"""
+			<string>Disconnect</string>
+			\s*<key>InterfaceTypeMatch</key>
+			\s*<string>WiFi</string>
+			\s*<key>SSIDMatch</key>
+			\s*<array>
+			\s*<string>trusted1</string>
+			\s*</array>
+			\s*<key>URLStringProbe</key>
+			\s*<string>https:\/\/example\.com\/200\.html</string>
+			"""
+
+	Scenario: The trusted ssids probe URL is set without trusted ssids flag being set.
+		When I run `ovpnmcgen.rb g --host aruba.cucumber.org --cafile ca.crt --p12file p12file.p12 --trusted-ssids-probe-url "https://example.com/200.html" cucumber aruba`
+		Then the output should contain "error: cannot set --trusted-ssids-probe-url without --trusted-ssids"
 
 	Scenario: The security-level flag is set to paranoid.
 		When I run `ovpnmcgen.rb g --host aruba.cucumber.org --cafile ca.crt --p12file p12file.p12 --security-level paranoid cucumber aruba`
@@ -443,4 +498,30 @@ Feature: Basic Generate Functionality
 			\s*<string>https:\/\/example\.com\/404\.html</string>
 			\s*</dict>
 			\s*</array>
+			"""
+
+	Scenario: The profile UUID flag is set.
+		When I run `ovpnmcgen.rb g --host aruba.cucumber.org --cafile ca.crt --p12file p12file.p12 --profile-uuid A43E7B13-4F02-4121-9B70-81C734E495C1 cucumber aruba`
+		Then the output should match:
+			"""
+			<key>PayloadIdentifier</key>
+			\s*<string>com.apple.vpn.managed.A43E7B13-4F02-4121-9B70-81C734E495C1</string>
+			"""
+
+	Scenario: The VPN profile name flag is set.
+		When I run `ovpnmcgen.rb g --host aruba.cucumber.org --cafile ca.crt --p12file p12file.p12 --vpn-name foobar cucumber aruba`
+		Then the output should match:
+			"""
+			<key>UserDefinedName</key>
+			\s*<string>foobar</string>
+			"""
+
+	Scenario: The idle timer flag is set.
+		When I run `ovpnmcgen.rb g --host aruba.cucumber.org --cafile ca.crt --p12file p12file.p12 --idle-timer 10 cucumber aruba`
+		Then the output should match:
+			"""
+			<key>DisconnectOnIdle</key>
+			\s*<integer>1</integer>
+			\s*<key>DisconnectOnIdleTimer</key>
+			\s*<integer>10</integer>
 			"""

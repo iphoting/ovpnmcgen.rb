@@ -19,6 +19,8 @@ module Ovpnmcgen
     untrusted_ssids = inputs[:untrusted_ssids] || false
     remotes = inputs[:remotes] || false
     vodDomains = inputs[:domains] || false
+    vpnName = inputs[:vpn_name] || "#{host}/VoD"
+    plistDescription = "OpenVPN Configuration Payload for #{user}-#{device}@#{host}"
 
     # Ensure [un]trusted_ssids are Arrays.
     trusted_ssids = Array(trusted_ssids) if trusted_ssids
@@ -32,6 +34,13 @@ module Ovpnmcgen
       puts "CA file not found: #{inputs[:cafile]}!"
       exit
     end
+
+    begin
+      tls_crypt = File.readlines(inputs[:tlscryptfile]).map { |x| x.chomp }.join('\n')
+    rescue Errno::ENOENT
+      puts "TLS crypt file not found: #{inputs[:tlscryptfile]}!"
+      exit
+    end if inputs[:tlscryptfile]
 
     begin
       tls_auth = File.readlines(inputs[:tafile]).map { |x| x.chomp }.join('\n')
@@ -63,6 +72,7 @@ module Ovpnmcgen
 
     unless inputs[:ovpnconfigfile].nil?
       ovpnconfighash = Ovpnmcgen.getOVPNVendorConfigHash(inputs[:ovpnconfigfile])
+      plistDescription = "#{plistDescription}. Includes custom OpenVPN directives #{ovpnconfighash.to_s.gsub('"', '').gsub('=>', '=')}."
     else # Bare minimum configuration
       ovpnconfighash = {
         'client' => 'NOARGS',
@@ -82,6 +92,7 @@ module Ovpnmcgen
     ovpnconfighash['ca'] = ca_cert
     ovpnconfighash['tls-auth'] = tls_auth if inputs[:tafile]
     ovpnconfighash['key-direction'] = '1' if inputs[:tafile]
+    ovpnconfighash['tls-crypt'] = tls_crypt if inputs[:tlscryptfile]
     ovpnconfighash['cert'] = cert_file if inputs[:cert]
     ovpnconfighash['key'] = key_file if inputs[:key]
     ovpnconfighash['vpn-on-demand'] = '0' unless enableVOD
@@ -134,7 +145,7 @@ module Ovpnmcgen
       'Action' => 'Ignore'
     }
 
-    # Insert URLStringProbe conditions when enabled with --url-probe
+    # Insert URLStringProbe conditions when enabled with --url-probe.
     vodTrusted['URLStringProbe'] =
       vodUntrusted['URLStringProbe'] =
       vodWifiOnly['URLStringProbe'] =
@@ -142,6 +153,9 @@ module Ovpnmcgen
       vodCellularOnly['URLStringProbe'] =
       vodDefault['URLStringProbe'] =
       inputs[:url_probe] if inputs[:url_probe]
+
+    # Insert trusted SSIDs-specific URLStringProbe condition when enabled with --trusted-ssids-url-probe.
+    vodTrusted['URLStringProbe'] = inputs[:trusted_ssids_probe_url] if inputs[:trusted_ssids_probe_url]
 
     vpnOnDemandRules << vodTrusted if trusted_ssids
     vpnOnDemandRules << vodUntrusted if untrusted_ssids
@@ -158,7 +172,7 @@ module Ovpnmcgen
       'PayloadContent' => StringData.new(p12file),
       'PayloadDescription' => 'Provides device authentication (certificate or identity).',
       'PayloadDisplayName' => "#{user}-#{device}.p12",
-      'PayloadIdentifier' => "#{identifier}.#{user}-#{device}.credential",
+      'PayloadIdentifier' => (inputs[:cert_uuid]) ? "com.apple.vpn.managed.#{certUUID}" : "#{identifier}.#{user}-#{device}.credential",
       'PayloadOrganization' => domain,
       'PayloadType' => 'com.apple.security.pkcs12',
       'PayloadUUID' => certUUID,
@@ -168,12 +182,12 @@ module Ovpnmcgen
     vpn = {
       'PayloadDescription' => "Configures VPN settings, including authentication.",
       'PayloadDisplayName' => "VPN (#{host}/VoD)",
-      'PayloadIdentifier' => "#{identifier}.#{user}-#{device}.vpnconfig",
+      'PayloadIdentifier' => (inputs[:vpn_uuid]) ? "com.apple.vpn.managed.#{certUUID}" : "#{identifier}.#{user}-#{device}.vpnconfig",
       'PayloadOrganization' => domain,
       'PayloadType' => 'com.apple.vpn.managed',
       'PayloadUUID' => vpnUUID,
       'PayloadVersion' => 1,
-      'UserDefinedName' => "#{host}/VoD",
+      'UserDefinedName' => vpnName,
       'VPN' => {
         'AuthenticationMethod' => 'Certificate',
         'OnDemandEnabled' => (enableVOD)? 1 : 0,
@@ -190,15 +204,19 @@ module Ovpnmcgen
       vpn['VPN']['AuthenticationMethod'] = 'Password'
       vpn['VPN'].delete('PayloadCertificateUUID')
     end
+    if inputs[:idle_timer]
+      vpn['VPN']['DisconnectOnIdle'] = 1
+      vpn['VPN']['DisconnectOnIdleTimer'] = inputs[:idle_timer]
+    end
 
     plistPayloadContent = [vpn]
     plistPayloadContent << cert if p12file
     #encPlistPayloadContent = cmsEncrypt([vpn, cert].to_plist).der_format
 
     plist = {
-      'PayloadDescription' => "OpenVPN Configuration Payload for #{user}-#{device}@#{host}",
+      'PayloadDescription' => plistDescription,
       'PayloadDisplayName' => "#{host} OpenVPN #{user}@#{device}",
-      'PayloadIdentifier' => "#{identifier}.#{user}-#{device}",
+      'PayloadIdentifier' => (inputs[:profile_uuid]) ? "com.apple.vpn.managed.#{plistUUID}" : "#{identifier}.#{user}-#{device}",
       'PayloadOrganization' => domain,
       'PayloadRemovalDisallowed' => false,
       'PayloadType' => 'Configuration',

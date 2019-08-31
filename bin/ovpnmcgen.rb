@@ -10,8 +10,10 @@ program :help, 'Usage', 'ovpnmcgen.rb <command> [options] <args...>'
 program :help_formatter, Commander::HelpFormatter::Terminal
 default_command :help
 never_trace!
-global_option '-c', '--config FILE', 'Specify path to config file. [Default: .ovpnmcgen.rb.yml]'
- 
+global_option('-c', '--config FILE', 'Specify path to config file. [Default: .ovpnmcgen.rb.yml]') do |config|
+  $config = config
+end
+
 command :generate do |c|
   c.syntax = 'ovpnmcgen.rb generate [options] <user> <device>'
   c.summary = 'Generates iOS Configuration Profiles (.mobileconfig)'
@@ -23,6 +25,7 @@ command :generate do |c|
   c.example 'Using OpenSSL to convert from PKCS#12 (.p12) to Key PEM file', 'openssl pkcs12 -in path/to/john-ipad.p12 -out path/to/john-ipad-key.pem -nodes -nocerts'
   c.option '--cafile FILE', 'Path to OpenVPN CA file. (Required)'
   c.option '--tafile FILE', 'Path to TLS-Auth Key file.'
+  c.option '--tlscryptfile FILE', 'Path to TLS-Crypt Key file.'
   c.option '--cert FILE', 'Path to Cert file.'
   c.option '--key FILE', 'Path to Private Key file.'
   c.option '--host HOSTNAME', 'Hostname of OpenVPN server. (Required)'
@@ -34,26 +37,37 @@ command :generate do |c|
   c.option '--v12compat', 'Enable OpenVPN Connect 1.2.x compatibility. When Enabled, use updated `VPNSubType: net.openvpn.connect.app` (changed since OpenVPN Connect 1.2.x). [Default: Disabled]'
   c.option '--security-level LEVEL', 'Security level of VPN-On-Demand Behaviour: paranoid, high, medium. [Default: high]'
   c.option '--vpn-uuid UUID', 'Override a VPN configuration payload UUID.'
+  c.option '--vpn-name NAME', 'Override a VPN configuration payload name displayed under Settings.app > General > VPN.'
   c.option '--profile-uuid UUID', 'Override a Profile UUID.'
   c.option '--cert-uuid UUID', 'Override a Certificate payload UUID.'
   c.option '-t', '--trusted-ssids SSIDS', Array, 'List of comma-separated trusted SSIDs.'
   c.option '-u', '--untrusted-ssids SSIDS', Array, 'List of comma-separated untrusted SSIDs.'
   c.option '-d', '--domains DOMAINS', Array, 'List of comma-separated domain names requiring VPN service.'
   c.option '--domain-probe-url PROBE', String, 'An HTTP(S) URL to probe, using a GET request. If no HTTP response code is received from the server, a VPN connection is established in response.'
+  c.option '--trusted-ssids-probe-url PROBE', String, 'An HTTP(S) URL to probe, using a GET request. If no HTTP response code is received from the server, a VPN connection may be established in response.'
   c.option '--url-probe URL', 'This URL must return HTTP status 200, without redirection, before the VPN service will try establishing.'
   c.option '--remotes REMOTES', Array, 'List of comma-separated alternate remotes: "<host> <port> <proto>".'
+  c.option '--idle-timer TIME', Integer, 'Disconnect from VPN when idle for a certain period of time (in seconds) which is useful for VPN-On-Demand scenarios. Requires disabling "Reconnect On Wakeup" on OpenVPN.app.'
   c.option '--ovpnconfigfile FILE', 'Path to OpenVPN client config file.'
   c.option '-o', '--output FILE', 'Output to file. [Default: stdout]'
   c.action do |args, options|
-    raise ArgumentError.new "Invalid arguments. Run '#{File.basename(__FILE__)} help generate' for guidance" if args.nil? or args.length < 2
-
     # Set up configuration environment.
-    if options.config
-      Ovpnmcgen.configure(options.config)
+    if $config
+      Ovpnmcgen.configure($config)
     else
       Ovpnmcgen.configure
     end
     config = Ovpnmcgen.config
+
+    user, device = args
+    if args.empty? and (options.p12file or config.p12file)
+      filename = File.basename((options.p12file or config.p12file), '.p12')
+      user, device = filename.split('-') if filename
+    end
+
+    unless user and device
+      raise ArgumentError.new "Invalid arguments. Run '#{File.basename(__FILE__)} help generate' for guidance"
+    end
 
     raise ArgumentError.new "Host is required" unless options.host or config.host
     raise ArgumentError.new "cafile is required" unless options.cafile or config.cafile
@@ -61,6 +75,14 @@ command :generate do |c|
     # A --p12file or (--cert and --key) needs to be provided. Shall not prevent user from specifying both.
     unless (options.p12file or config.p12file) or ((options.cert or config.cert) and (options.key or config.key))
       raise ArgumentError.new "PKCS#12 or cert & key file required"
+    end
+
+    if (options.trusted_ssids_probe_url or config.trusted_ssids_probe_url) and not (options.trusted_ssids or config.trusted_ssids)
+      raise ArgumentError.new "cannot set --trusted-ssids-probe-url without --trusted-ssids"
+    end
+
+    if (config.tafile or options.tafile) and (config.tlscryptfile or options.tlscryptfile)
+      raise ArgumentError.new "tafile and tlscryptfile cannot be both set"
     end
 
     options.default :vod => case
@@ -75,8 +97,6 @@ command :generate do |c|
       :port => (config.port)? config.port : 1194,
       :security_level => (config.security_level)? config.security_level : 'high'
 
-    user, device = args
-
     inputs = {
       :user => user,
       :device => device,
@@ -87,15 +107,18 @@ command :generate do |c|
       :port => options.port,
       :enableVOD => options.vod,
       :trusted_ssids => options.trusted_ssids || config.trusted_ssids,
+      :trusted_ssids_probe_url => options.trusted_ssids_probe_url || config.trusted_ssids_probe_url,
       :untrusted_ssids => options.untrusted_ssids || config.untrusted_ssids,
       :profile_uuid => options.profile_uuid || config.profile_uuid,
       :vpn_uuid => options.vpn_uuid || config.vpn_uuid,
+      :vpn_name => options.vpn_name || config.vpn_name,
       :cert_uuid => options.cert_uuid || config.cert_uuid,
       :security_level => options.security_level
     }
     inputs[:ovpnconfigfile] = options.ovpnconfigfile || config.ovpnconfigfile if options.ovpnconfigfile or config.ovpnconfigfile
     inputs[:p12file] = options.p12file || config.p12file if options.p12file or config.p12file
     inputs[:tafile] = options.tafile || config.tafile if options.tafile or config.tafile
+    inputs[:tlscryptfile] = options.tlscryptfile || config.tlscryptfile if options.tlscryptfile or config.tlscryptfile
     inputs[:cert] = options.cert || config.cert if options.cert or config.cert
     inputs[:key] = options.key || config.key if options.key or config.key
     inputs[:url_probe] = options.url_probe || config.url_probe if options.url_probe or config.url_probe
@@ -103,6 +126,7 @@ command :generate do |c|
     inputs[:domains] = options.domains || config.domains if options.domains or config.domains
     inputs[:domain_probe_url] = options.domain_probe_url || config.domain_probe_url if options.domain_probe_url or config.domain_probe_url
     inputs[:v12compat] = options.v12compat || config.v12compat if options.v12compat or config.v12compat
+    inputs[:idle_timer] = options.idle_timer || config.idle_timer if options.idle_timer or config.idle_timer
 
     unless options.output
       puts Ovpnmcgen.generate(inputs)
