@@ -3,6 +3,12 @@
 <a name="unreleased"></a>
 ## [Unreleased]
 
+
+
+
+<a name="v0.7.0"></a>
+## [v0.7.0] - 2019-08-31
+
 - Improve url probe handling
 - Extract user and device information from p12
 - Add support for disconnect on idle timer
@@ -94,7 +100,8 @@
 - Initial release
 
 
-[Unreleased]: https://github.com/iphoting/ovpnmcgen.rb/compare/v0.6.0...HEAD
+[Unreleased]: https://github.com/iphoting/ovpnmcgen.rb/compare/v0.7.0...HEAD
+[v0.7.0]: https://github.com/iphoting/ovpnmcgen.rb/compare/v0.6.0...v0.7.0
 [v0.6.0]: https://github.com/iphoting/ovpnmcgen.rb/compare/v0.5.0...v0.6.0
 [v0.5.0]: https://github.com/iphoting/ovpnmcgen.rb/compare/v0.5.0.pre...v0.5.0
 [v0.5.0.pre]: https://github.com/iphoting/ovpnmcgen.rb/compare/v0.4.2...v0.5.0.pre
