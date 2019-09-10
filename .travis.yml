@@ -12,13 +12,11 @@ rvm:
   - 2.5
   - 2.6
   - ruby-head
-  - jruby-19mode
 
 matrix:
   fast_finish: true
   allow_failures:
     - rvm: ruby-head
-    - rvm: jruby-19mode
 
 deploy:
   provider: rubygems
@@ -28,5 +26,5 @@ deploy:
   on:
     tags: true
     repo: "iphoting/ovpnmcgen.rb"
-    ruby: 2.4
+    ruby: 2.6
     branch: master
