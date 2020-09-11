@@ -23,7 +23,7 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "bundler", "~> 2.0"
   spec.add_development_dependency "rake"
-  spec.add_development_dependency "aruba", "~> 0.5", ">= 0.5.4"
+  spec.add_development_dependency "aruba", "~> 1.0", ">= 0.5.4"
   spec.add_development_dependency "pre-commit"
   spec.add_runtime_dependency     "plist", "~> 3.5", ">= 3.5.0"
   spec.add_runtime_dependency     "commander", "~> 4.4", ">= 4.4.7"
