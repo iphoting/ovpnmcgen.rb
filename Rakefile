@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require "bundler/gem_tasks"
 require 'cucumber/rake/task'
 
@@ -8,9 +9,5 @@ end
 
 desc "Run cucumber tests"
 task :test => :cucumber
-
-namespace :pre_commit do
-	task :ci => [:test]
-end
 
 task :default => :test

@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
 require 'ovpnmcgen'
 require 'commander/import'
@@ -66,23 +67,23 @@ command :generate do |c|
     end
 
     unless user and device
-      raise ArgumentError.new "Invalid arguments. Run '#{File.basename(__FILE__)} help generate' for guidance"
+      raise ArgumentError, "Invalid arguments. Run '#{File.basename(__FILE__)} help generate' for guidance"
     end
 
-    raise ArgumentError.new "Host is required" unless options.host or config.host
-    raise ArgumentError.new "cafile is required" unless options.cafile or config.cafile
+    raise ArgumentError, "Host is required" unless options.host or config.host
+    raise ArgumentError, "cafile is required" unless options.cafile or config.cafile
 
     # A --p12file or (--cert and --key) needs to be provided. Shall not prevent user from specifying both.
     unless (options.p12file or config.p12file) or ((options.cert or config.cert) and (options.key or config.key))
-      raise ArgumentError.new "PKCS#12 or cert & key file required"
+      raise ArgumentError, "PKCS#12 or cert & key file required"
     end
 
     if (options.trusted_ssids_probe_url or config.trusted_ssids_probe_url) and not (options.trusted_ssids or config.trusted_ssids)
-      raise ArgumentError.new "cannot set --trusted-ssids-probe-url without --trusted-ssids"
+      raise ArgumentError, "cannot set --trusted-ssids-probe-url without --trusted-ssids"
     end
 
     if (config.tafile or options.tafile) and (config.tlscryptfile or options.tlscryptfile)
-      raise ArgumentError.new "tafile and tlscryptfile cannot be both set"
+      raise ArgumentError, "tafile and tlscryptfile cannot be both set"
     end
 
     options.default :vod => case
