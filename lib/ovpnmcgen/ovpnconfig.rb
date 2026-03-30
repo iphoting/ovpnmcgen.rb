@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 
 module Ovpnmcgen
   def getOVPNVendorConfigHash(ovpnfilepath)
@@ -10,14 +11,14 @@ module Ovpnmcgen
       # Bail when inline cert/key enclosures are detected.
       ovpnfile.each do |l|
         r = l.chomp.match(/<.*>/)
-        raise ArgumentError.new "OpenVPN client config file contains inline data enclosures: #{r.to_a.join(', ')}!\nSuch files are not yet supported. Remove them and try again" unless r.nil?
+        raise ArgumentError, "OpenVPN client config file contains inline data enclosures: #{r.to_a.join(', ')}!\nSuch files are not yet supported. Remove them and try again" unless r.nil?
       end
 
       # TODO: Handle multiple remote lines.
       # Currently, all remote lines are ignored.
 
       # map to key => value pairs for plist purposes. Singular verbs will be: 'verb' => 'NOARGS'.
-      ovpnhash = Hash[ovpnfile.map do |l|
+      ovpnhash = ovpnfile.map do |l|
         a = l.split
         if a.length == 1
           a << "NOARGS"
@@ -27,7 +28,7 @@ module Ovpnmcgen
           a.replace(b << c)
         end
         a
-      end]
+      end.to_h
 
       # delete obviously unsupported keys.
       ovpnhash.delete_if do |key, value|
