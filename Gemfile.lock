@@ -98,5 +98,3 @@ DEPENDENCIES
   pre-commit
   rake (>= 13.0)
 
-BUNDLED WITH
-   2.7.2
