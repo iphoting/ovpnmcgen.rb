@@ -2,6 +2,7 @@ PATH
   remote: .
   specs:
     ovpnmcgen.rb (0.8.0)
+      abbrev
       app_configuration (~> 0.0, >= 0.0.2)
       commander (~> 4.4)
       plist (~> 3.5)
@@ -9,6 +10,7 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
+    abbrev (0.1.2)
     app_configuration (0.0.3)
     aruba (2.3.3)
       bundler (>= 1.17)
@@ -34,7 +36,7 @@ GEM
       mini_mime (~> 1.1)
       multi_test (~> 1.1)
       sys-uname (~> 1.3)
-    cucumber-ci-environment (11.0.0)
+    cucumber-ci-environment (9.2.0)
     cucumber-core (16.2.0)
       cucumber-gherkin (> 36, < 40)
       cucumber-messages (> 31, < 33)
@@ -94,6 +96,7 @@ PLATFORMS
 DEPENDENCIES
   aruba (~> 2.0)
   bundler (~> 2.0)
+  cucumber-ci-environment (< 10)
   ovpnmcgen.rb!
   pre-commit
   rake (>= 13.0)
