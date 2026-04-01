@@ -96,7 +96,6 @@ PLATFORMS
 DEPENDENCIES
   aruba (~> 2.0)
   bundler (~> 2.0)
-  cucumber-ci-environment (< 10)
   ovpnmcgen.rb!
   pre-commit
   rake (>= 13.0)
