@@ -23,6 +23,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake", ">= 13.0"
   spec.add_development_dependency "aruba", "~> 2.0"
   spec.add_development_dependency "pre-commit"
+  spec.add_runtime_dependency     "abbrev"
   spec.add_runtime_dependency     "plist", "~> 3.5"
   spec.add_runtime_dependency     "commander", "~> 4.4"
   spec.add_runtime_dependency     "app_configuration", "~> 0.0", ">= 0.0.2"
